@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app, render_template_stri
 import difflib
 from sentence_transformers import SentenceTransformer
 import numpy as np
+from flask import current_app, g
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
@@ -447,8 +448,10 @@ def get_qa_data():
     return current_app.config['FAQS_DATA']
 
 def get_question_embeddings(qa_data):
-    questions = [item["question"] for item in qa_data]
-    return model.encode(questions)
+    if not hasattr(g, 'question_embeddings'):
+        questions = [item["question"] for item in qa_data]
+        g.question_embeddings = model.encode(questions)
+    return g.question_embeddings
 
 def cosine_sim(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
