@@ -25,11 +25,12 @@ def model_status():
 HTML_PAGE = """<!DOCTYPE html>
 <html>
 <head>
-  <title>FAQ Application Chatbot </title>
+  <title>CUT | FAQ Chatbot </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/favicon.png') }}">
   <style>
     :root {
-      --bg: linear-gradient(135deg, #e0e7ff 0%, #f4f7fa 100%);
+      --bg: url('{{ url_for('static', filename='assets/images/background.jpg') }}') center/cover no-repeat fixed, linear-gradient(135deg, #e0e7ff 0%, #f4f7fa 100%);
       --bubble-bot: #f1f5fb;
       --bubble-user: #2563eb;
       --bubble-shadow: 0 2px 8px rgba(0,0,0,0.07);
