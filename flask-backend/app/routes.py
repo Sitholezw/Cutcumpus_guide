@@ -93,6 +93,24 @@ HTML_PAGE = """
     #sendBtn:hover {
       background: #005fa3;
     }
+    #faqSuggestions {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    #faqSuggestions button {
+      background: #e1f5fe;
+      color: #01579b;
+      border: 1px solid #b3e5fc;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-right: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #faqSuggestions button:hover {
+      background: #b3e5fc;
+    }
     @media (max-width: 500px) {
       #chatbox, #inputArea {
         max-width: 98vw;
@@ -109,6 +127,12 @@ HTML_PAGE = """
     <button id="sendBtn" onclick="sendQuestion()">Send</button>
     <input type="file" id="fileInput" style="display:none" onchange="sendFile()" />
     <button onclick="document.getElementById('fileInput').click()">📎</button>
+  </div>
+  <div id="faqSuggestions">
+    <strong>Popular questions:</strong>
+    <button onclick="quickAsk('How do I retrieve my reg number?')">How do I retrieve my reg number?</button>
+    <button onclick="quickAsk('How do I accept my offer?')">How do I accept my offer?</button>
+    <!-- Add more as needed -->
   </div>
 
   <script>
@@ -217,6 +241,34 @@ HTML_PAGE = """
         }
       };
       reader.readAsText(file);
+    }
+
+    function quickAsk(question) {
+      addBubble(question, 'user');
+      input.value = '';
+      showTyping();
+      sendBtn.disabled = true;
+      fetch('/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Server error');
+        return res.json();
+      })
+      .then(data => {
+        hideTyping();
+        addBubble(data.answer, 'bot');
+      })
+      .catch(e => {
+        hideTyping();
+        addBubble("Sorry, something went wrong. Please try again later.", 'bot');
+      })
+      .finally(() => {
+        sendBtn.disabled = false;
+        input.focus();
+      });
     }
 
     window.onload = () => {
