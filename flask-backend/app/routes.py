@@ -107,6 +107,8 @@ HTML_PAGE = """
   <div id="inputArea">
     <input id="questionInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){sendQuestion();}" aria-label="Type your question" />
     <button id="sendBtn" onclick="sendQuestion()">Send</button>
+    <input type="file" id="fileInput" style="display:none" onchange="sendFile()" />
+    <button onclick="document.getElementById('fileInput').click()">📎</button>
   </div>
 
   <script>
@@ -188,6 +190,33 @@ HTML_PAGE = """
       }
       sendBtn.disabled = false;
       input.focus();
+    }
+
+    function sendFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const content = e.target.result;
+        addBubble("File received: " + file.name, 'user');
+        showTyping();
+        try {
+          const res = await fetch('/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: content })
+          });
+          if (!res.ok) throw new Error('Server error');
+          const data = await res.json();
+          hideTyping();
+          addBubble(data.answer, 'bot');
+        } catch (e) {
+          hideTyping();
+          addBubble("Sorry, something went wrong with the file. Please try again later.", 'bot');
+        }
+      };
+      reader.readAsText(file);
     }
 
     window.onload = () => {
