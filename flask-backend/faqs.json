@@ -1,0 +1,132 @@
+[
+  {
+    "question": "What are your business hours?",
+    "answer": "We are open Monday to Friday, 8 AM to 4.30 PM."
+  },
+  {
+    "question": "Where are you located?",
+    "answer": "Harare, Chirundu rd, 2274, Chinhoyi, Zimbabwe."
+  },
+  {
+  "question": "How can I contact customer support?",
+  "answer": "You can reach us at icthelpdesk@cut.ac.zw or call us at +263 123 456 789."
+  },
+ {
+  "question": "What payment methods do you accept?",
+  "answer": "We accept credit cards, debit cards, and PayPal."
+ },
+ {
+  "question": "how much is the application fee?",
+  "answer": "The application fee for undergrade is $15 us or zig eqv."
+ },
+  {
+    "question": "What is the application deadline?",
+    "answer": "The application deadline for the next academic year is June 30."
+  },
+  {
+    "question": "Do you offer scholarships?",
+    "answer": "Yes, we offer various scholarships based on merit and need."
+  },
+  {
+    "question": "Can I apply online?",
+    "answer": "Yes, you can apply online through our website www.cut.ac.zw."
+  },
+  {
+    "question": "What documents are required for application?",
+    "answer": "You need to submit your academic transcripts(A and O Level Results), ID, and a personal statement."
+  },
+  {
+    "question": "What programs do you offer?",
+    "answer": "We offer a wide range of undergraduate and postgraduate programs in various fields."
+  },
+  {
+    "question": "Is there a campus tour available?",
+    "answer": "Yes, we offer campus tours every Friday at 10 AM. Please book in advance."
+  },
+  {
+    "question": "How can I check the status of my application?",
+    "answer": "You can check your application status on our website using your National ID by clicking the Track Application button."
+  },
+  {
+    "question": "What is the tuition fee for international students?",
+    "answer": "The tuition fee for international students varies by program. Please refer to our website for details."
+  },
+  {
+    "question": "Do you have a library?",
+    "answer": "Yes, we have a well-equipped library with a vast collection of books and online resources."
+  },
+  {
+    "question": "Are there any extracurricular activities?",
+    "answer": "Yes, we offer various clubs and societies for students to join."
+  },
+  {
+    "question": "What is the student-to-faculty ratio?",
+    "answer": "Our student-to-faculty ratio is approximately 50:1, ensuring personalized attention."
+  },
+  {
+    "question": "Do you provide accommodation for students?",
+    "answer": "Yes, we provide on-campus accommodation for students. Please apply early as spaces are limited."
+  },
+  {
+    "question": "What is the process for transferring credits from another institution?",
+    "answer": "You need to submit your transcripts and course descriptions for evaluation. Our academic office will guide you through the process."
+  },
+  {
+    "question": "How can I get involved in research opportunities?",
+    "answer": "Students can get involved in research by contacting faculty members or applying for research assistant positions."
+  }, 
+  {
+    "question": "What support services are available for students?",
+    "answer": "We offer academic advising, counseling, and career services to support our students."
+  },
+  {
+    "question": "Can I defer my admission?",
+    "answer": "Yes, you can defer your admission for one year by submitting a request to the admissions office."
+  },
+  {
+    "question": "What is the policy on refunds?",
+    "answer": "Refunds are processed according to our refund policy, which is available on our website."
+  },
+  {
+    "question": "How can I stay updated with university news?",
+    "answer": "You can view the newsletter panel on our online page it provides with every update ."
+  },
+  {
+    "question": "Do you have a student health center?",
+    "answer": "Yes, we have a student health center that provides medical services to all enrolled students."
+  },
+  {
+    "question": "What is the process for applying for a visa?",
+    "answer": "International students need to apply for a student visa through the Zimbabwean embassy or consulate in their home country."
+  },
+  {
+    "question": "How can I track my application?",
+    "answer": "To track your application you need to go to the cut website (www.cut.ac.zw) using any web browser:<br>1. On your bottom right click track application<br>2. Enter your credentials (your ID number and password)<br>3. Click complete"
+  },
+  {
+    "question": "How do I apply online?",
+    "answer": "To apply online go to the cut website (www.cut.ac.zw)<br>On your bottom right click apply<br>Provide the necessary information requested (Period being applied for, level (undergrad or postgrad), Entry type and attendance type) and click next<br>Select 3 programme choices and click next<br>Enter personal details and click next<br>Make your payment and proceed with your application."
+  },
+  {
+    "question": "How do I reset my password?",
+    "answer": "To reset your password go to the cut website (www.cut.ac.zw)<br>On your bottom right click track application<br>Click forgot password and enter your ID number<br>Follow the instructions sent to your email to reset your password."
+  },
+  {
+    "question": "How do I retrieve my reg number?",
+    "answer": "To retrieve your application you need to go to the cut website (www.cut.ac.zw) using any web browser:<br>On your bottom right click track application<br>Enter your credentials (your ID number and password)<br>Click complete<br>Accept your offer by agreeing to the terms and conditions<br>Enter your current password<br>Take note of the reg number that appears where the application number was previously displayed."
+  },
+  {
+    "question": "How do I accept my offer?",
+    "answer": "To accept your offer you need to go to the cut website (www.cut.ac.zw) using any web browser:<br>On your bottom right click track application<br>Enter your credentials (your ID number and password)<br>Click complete<br>Accept your offer by agreeing to the terms and conditions<br>Enter your current password."
+  },
+  {
+    "question": "How do I enter my national id ?",
+      "answer": "The first 2 digits should be entered into the first box of the national id text area<br>Make sure that the letter of your id number goes into the third place of the id text area<br>Lastly make sure that the last 2 digits goes into the last box of the text area<br>The rest of the digits are now centred on the main body which is the second box"
+    },
+    {
+      "question": "How do I create a strong recommended password ?",
+      "answer": "Follow instructions from the password hint.<br>Your password should contain a number, upper case character, lower case character, special character.<br>If there is still a red color on the password requirement field type that means the password is lacking that specific red character."
+    }
+
+  
+]
