@@ -447,6 +447,49 @@ def ask():
 def health():
     return jsonify({'status': 'ok'})
 
+@bp.route('/admin', methods=['GET'])
+def admin_page():
+    faqs = get_qa_data()
+    return render_template_string("""
+    <h2>FAQ Admin Panel</h2>
+    <form id="faqForm">
+      <input name="question" placeholder="Question" style="width:300px" required>
+      <input name="answer" placeholder="Answer" style="width:300px" required>
+      <button type="submit">Add FAQ</button>
+    </form>
+    <ul id="faqList">
+      {% for faq in faqs %}
+        <li><b>{{faq.question}}</b>: {{faq.answer}}</li>
+      {% endfor %}
+    </ul>
+    <script>
+      document.getElementById('faqForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const res = await fetch('/admin/add', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            question: form.question.value,
+            answer: form.answer.value
+          })
+        });
+        if (res.ok) location.reload();
+        else alert('Failed to add FAQ');
+      }
+    </script>
+    """, faqs=faqs)
+
+@bp.route('/admin/add', methods=['POST'])
+def admin_add():
+    data = request.get_json()
+    faqs = get_qa_data()
+    faqs.append({'question': data['question'], 'answer': data['answer']})
+    # Optionally, save to file here
+    global question_embeddings_cache
+    question_embeddings_cache = None  # Invalidate cache
+    return jsonify({'status': 'ok'})
+
 def get_qa_data():
     # Use the loaded FAQ data from config
     return current_app.config['FAQS_DATA']
