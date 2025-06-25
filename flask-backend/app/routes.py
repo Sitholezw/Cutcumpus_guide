@@ -275,6 +275,44 @@ HTML_PAGE = """<!DOCTYPE html>
     body.dark #themeToggle:hover {
       background: #1e293b;
     }
+
+    /* Responsive styles for mobile */
+    @media (max-width: 600px) {
+      #chatbox,
+      #inputArea,
+      #faqSuggestions {
+        max-width: 98vw;
+        width: 98vw;
+        padding-left: 2vw;
+        padding-right: 2vw;
+        min-width: 0;
+      }
+      h1 {
+        font-size: 1.1em;
+        margin-top: 18px;
+      }
+      #chatbox {
+        padding: 18px 6px 12px 6px;
+        min-height: 220px;
+      }
+      #inputArea {
+        gap: 4px;
+      }
+      #faqSuggestions {
+        font-size: 0.95em;
+        gap: 4px;
+      }
+      .bubble {
+        font-size: 0.98em;
+        padding: 10px 12px;
+      }
+      .bot-avatar {
+        width: 26px;
+        height: 26px;
+        font-size: 1em;
+        margin-right: 6px;
+      }
+    }
   </style>
 </head>
 <body>
