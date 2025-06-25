@@ -143,6 +143,7 @@ HTML_PAGE = """
   </div>
   <button id="themeToggle" style="position:absolute;top:10px;right:10px;">🌙</button>
 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const chatbox = document.getElementById('chatbox');
     const input = document.getElementById('questionInput');
