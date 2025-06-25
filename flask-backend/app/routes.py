@@ -447,11 +447,14 @@ def get_qa_data():
     # Use the loaded FAQ data from config
     return current_app.config['FAQS_DATA']
 
+question_embeddings_cache = None
+
 def get_question_embeddings(qa_data):
-    if not hasattr(g, 'question_embeddings'):
+    global question_embeddings_cache
+    if question_embeddings_cache is None:
         questions = [item["question"] for item in qa_data]
-        g.question_embeddings = model.encode(questions)
-    return g.question_embeddings
+        question_embeddings_cache = model.encode(questions)
+    return question_embeddings_cache
 
 def cosine_sim(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
