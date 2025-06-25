@@ -1,30 +1,28 @@
 from flask import Blueprint, request, jsonify, current_app, render_template_string
-import difflib
 import numpy as np
-from flask import current_app, g
+import json
+from sentence_transformers import SentenceTransformer
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
-
 bp = Blueprint('routes', __name__)
 
-model_ready = [False]
+# Load the model once at startup
+model = SentenceTransformer('all-MiniLM-L6-v2')
+model_ready = [True]
 
-def load_model():
-    global model
-    from sentence_transformers import SentenceTransformer
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    model_ready[0] = True
+# Load the FAQ data from faqs.json
+with open('faqs.json', encoding='utf-8') as f:
+    FAQS_DATA = json.load(f)
 
-import threading
-threading.Thread(target=load_model).start()
+# Precompute embeddings
+question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
 
 @bp.route('/model_status')
 def model_status():
     return jsonify({'ready': model_ready[0]})
 
-HTML_PAGE = """
-<!DOCTYPE html>
+HTML_PAGE = """<!DOCTYPE html>
 <html>
 <head>
   <title>FAQ Application Chatbot </title>
@@ -444,13 +442,12 @@ HTML_PAGE = """
           await new Promise(r => setTimeout(r, 1500));
         }
       }
-      location.reload();
+      
     }
     waitForModel();
   </script>
 </body>
-</html>
-"""
+</html> """  # Keep all your existing HTML as is
 
 @bp.route('/')
 def index():
@@ -460,14 +457,11 @@ def index():
 def ask():
     data = request.get_json()
     question = data.get('question', '').strip()
-    qa_data = get_qa_data()
-    question_embeddings = get_question_embeddings(qa_data)
 
-    matches = search_answer(question, qa_data, question_embeddings, top_k=3)
+    matches = search_answer(question, FAQS_DATA, question_embeddings_cache, top_k=1)
     if matches:
-        return jsonify({'answers': [m['answer'] for m in matches]})
-    else:
-        return jsonify({'answers': ["Sorry, I couldn't find an answer to your question."]}), 404
+        return jsonify({'answer': matches[0]['answer']})
+    return jsonify({'answer': "Sorry, I couldn't find an answer to your question."}), 404
 
 @bp.route('/health')
 def health():
@@ -475,7 +469,6 @@ def health():
 
 @bp.route('/admin', methods=['GET'])
 def admin_page():
-    faqs = get_qa_data()
     return render_template_string("""
     <h2>FAQ Admin Panel</h2>
     <form id="faqForm">
@@ -495,39 +488,24 @@ def admin_page():
         const res = await fetch('/admin/add', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            question: form.question.value,
-            answer: form.answer.value
-          })
+          body: JSON.stringify({ question: form.question.value, answer: form.answer.value })
         });
         if (res.ok) location.reload();
         else alert('Failed to add FAQ');
       }
     </script>
-    """, faqs=faqs)
+    """, faqs=FAQS_DATA)
 
 @bp.route('/admin/add', methods=['POST'])
 def admin_add():
     data = request.get_json()
-    faqs = get_qa_data()
-    faqs.append({'question': data['question'], 'answer': data['answer']})
-    # Optionally, save to file here
+    FAQS_DATA.append({'question': data['question'], 'answer': data['answer']})
     global question_embeddings_cache
-    question_embeddings_cache = None  # Invalidate cache
+    question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
+    # Save back to file
+    with open('faqs.json', 'w', encoding='utf-8') as f:
+        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
     return jsonify({'status': 'ok'})
-
-def get_qa_data():
-    # Use the loaded FAQ data from config
-    return current_app.config['FAQS_DATA']
-
-question_embeddings_cache = None
-
-def get_question_embeddings(qa_data):
-    global question_embeddings_cache
-    if question_embeddings_cache is None:
-        questions = [item["question"] for item in qa_data]
-        question_embeddings_cache = model.encode(questions)
-    return question_embeddings_cache
 
 def cosine_sim(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
@@ -536,4 +514,7 @@ def search_answer(user_question, qa_data, question_embeddings, top_k=1):
     user_embedding = model.encode([user_question])[0]
     scores = [cosine_sim(user_embedding, q_emb) for q_emb in question_embeddings]
     top_indices = np.argsort(scores)[::-1][:top_k]
-    return [qa_data[i] for i in top_indices if scores[i] > 0.5]  # Only return if similarity is reasonable
+    return [qa_data[i] for i in top_indices]
+
+# Register blueprint in your app.py or main file
+# app.register_blueprint(bp)
