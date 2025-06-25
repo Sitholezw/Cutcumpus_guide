@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app, render_template_string
 import difflib
-from sentence_transformers import SentenceTransformer
 import numpy as np
 from flask import current_app, g
 
@@ -9,8 +8,20 @@ main = Blueprint('main', __name__)
 
 bp = Blueprint('routes', __name__)
 
-# Load the embedding model once at startup
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model_ready = [False]
+
+def load_model():
+    global model
+    from sentence_transformers import SentenceTransformer
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    model_ready[0] = True
+
+import threading
+threading.Thread(target=load_model).start()
+
+@bp.route('/model_status')
+def model_status():
+    return jsonify({'ready': model_ready[0]})
 
 HTML_PAGE = """
 <!DOCTYPE html>
