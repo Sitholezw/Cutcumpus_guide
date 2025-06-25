@@ -128,6 +128,18 @@ HTML_PAGE = """
       const bubble = document.createElement('div');
       bubble.className = 'bubble ' + sender;
       bubble.innerHTML = text;
+      if (sender === 'bot') {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerText = 'Copy';
+        copyBtn.style.marginLeft = '10px';
+        copyBtn.style.fontSize = '0.8em';
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(text.replace(/<br\s*\/?>/gi, '\n'));
+          copyBtn.innerText = 'Copied!';
+          setTimeout(() => copyBtn.innerText = 'Copy', 1000);
+        };
+        bubble.appendChild(copyBtn);
+      }
       const time = document.createElement('div');
       time.style.fontSize = '0.75em';
       time.style.color = '#888';
