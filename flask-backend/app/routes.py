@@ -443,6 +443,10 @@ def ask():
     else:
         return jsonify({'answers': ["Sorry, I couldn't find an answer to your question."]}), 404
 
+@bp.route('/health')
+def health():
+    return jsonify({'status': 'ok'})
+
 def get_qa_data():
     # Use the loaded FAQ data from config
     return current_app.config['FAQS_DATA']
