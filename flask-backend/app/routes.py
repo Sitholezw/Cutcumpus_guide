@@ -10,7 +10,7 @@ HTML_PAGE = """
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FAQ Chatbot</title>
+  <title>FAQ Application Chatbot </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
