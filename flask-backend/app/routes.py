@@ -59,7 +59,7 @@ HTML_PAGE = """<!DOCTYPE html>
     #chatbox {
       width: 100%;
       max-width: 420px;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.55); /* semi-transparent white */
       border-radius: 18px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.10);
       padding: 28px 18px 18px 18px;
@@ -70,6 +70,8 @@ HTML_PAGE = """<!DOCTYPE html>
       gap: 14px;
       overflow-y: auto;
       transition: box-shadow 0.2s;
+      backdrop-filter: blur(12px); /* glass effect */
+      -webkit-backdrop-filter: blur(12px); /* Safari support */
     }
     .bubble {
       max-width: 80%;
