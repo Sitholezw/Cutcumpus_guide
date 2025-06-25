@@ -432,6 +432,21 @@ HTML_PAGE = """
       }
       input.focus();
     };
+
+    async function waitForModel() {
+      let ready = false;
+      while (!ready) {
+        const res = await fetch('/model_status');
+        const data = await res.json();
+        ready = data.ready;
+        if (!ready) {
+          document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Loading AI model, please wait...</h2>";
+          await new Promise(r => setTimeout(r, 1500));
+        }
+      }
+      location.reload();
+    }
+    waitForModel();
   </script>
 </body>
 </html>
