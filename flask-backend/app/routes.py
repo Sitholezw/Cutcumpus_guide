@@ -134,6 +134,7 @@ HTML_PAGE = """
     <button onclick="quickAsk('How do I accept my offer?')">How do I accept my offer?</button>
     <!-- Add more as needed -->
   </div>
+  <button id="themeToggle" style="position:absolute;top:10px;right:10px;">🌙</button>
 
   <script>
     const chatbox = document.getElementById('chatbox');
@@ -275,6 +276,43 @@ HTML_PAGE = """
       loadHistory();
       if (!chatbox.innerHTML) {
         addBubble("Hi! I'm your CUT FAQ assistant. Ask me anything about the application process.", 'bot');
+      }
+      input.focus();
+    };
+
+    // Theme toggle script
+    const themeToggle = document.getElementById('themeToggle');
+    let darkMode = false;
+
+    themeToggle.onclick = () => {
+      darkMode = !darkMode;
+      if (darkMode) {
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = '#e0e0e0';
+        themeToggle.innerHTML = '🌙';
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.style.backgroundColor = '#f4f7fa';
+        document.body.style.color = '#333';
+        themeToggle.innerHTML = '☀️';
+        localStorage.setItem('darkMode', 'false');
+      }
+    };
+
+    // Load dark mode preference
+    window.onload = () => {
+      loadHistory();
+      const darkModePreference = localStorage.getItem('darkMode');
+      if (darkModePreference === 'true') {
+        darkMode = true;
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = '#e0e0e0';
+        themeToggle.innerHTML = '🌙';
+      } else {
+        darkMode = false;
+        document.body.style.backgroundColor = '#f4f7fa';
+        document.body.style.color = '#333';
+        themeToggle.innerHTML = '☀️';
       }
       input.focus();
     };
