@@ -437,11 +437,11 @@ def ask():
     qa_data = get_qa_data()
     question_embeddings = get_question_embeddings(qa_data)
 
-    matches = search_answer(question, qa_data, question_embeddings, top_k=1)
+    matches = search_answer(question, qa_data, question_embeddings, top_k=3)
     if matches:
-        return jsonify({'answer': matches[0]['answer']})
+        return jsonify({'answers': [m['answer'] for m in matches]})
     else:
-        return jsonify({'answer': "Sorry, I couldn't find an answer to your question."}), 404
+        return jsonify({'answers': ["Sorry, I couldn't find an answer to your question."]}), 404
 
 def get_qa_data():
     # Use the loaded FAQ data from config
