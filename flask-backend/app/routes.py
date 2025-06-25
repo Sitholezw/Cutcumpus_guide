@@ -12,8 +12,15 @@ HTML_PAGE = """
 <head>
   <title>FAQ Chatbot</title>
   <style>
+    :root {
+      --bg: #f4f7fa;
+      --bubble-bot: #e9ecef;
+      --bubble-user: #0078d7;
+      --text: #222;
+    }
     body {
-      background: #f4f7fa;
+      background: var(--bg);
+      color: var(--text);
       font-family: 'Segoe UI', Arial, sans-serif;
       display: flex;
       flex-direction: column;
@@ -51,14 +58,14 @@ HTML_PAGE = """
     }
     .user {
       align-self: flex-end;
-      background: #0078d7;
+      background: var(--bubble-user);
       color: #fff;
       border-bottom-right-radius: 6px;
     }
     .bot {
       align-self: flex-start;
-      background: #e9ecef;
-      color: #222;
+      background: var(--bubble-bot);
+      color: var(--text);
       border-bottom-left-radius: 6px;
     }
     #inputArea {
@@ -287,13 +294,11 @@ HTML_PAGE = """
     themeToggle.onclick = () => {
       darkMode = !darkMode;
       if (darkMode) {
-        document.body.style.backgroundColor = '#121212';
-        document.body.style.color = '#e0e0e0';
+        document.body.classList.add('dark');
         themeToggle.innerHTML = '🌙';
         localStorage.setItem('darkMode', 'true');
       } else {
-        document.body.style.backgroundColor = '#f4f7fa';
-        document.body.style.color = '#333';
+        document.body.classList.remove('dark');
         themeToggle.innerHTML = '☀️';
         localStorage.setItem('darkMode', 'false');
       }
@@ -305,13 +310,11 @@ HTML_PAGE = """
       const darkModePreference = localStorage.getItem('darkMode');
       if (darkModePreference === 'true') {
         darkMode = true;
-        document.body.style.backgroundColor = '#121212';
-        document.body.style.color = '#e0e0e0';
+        document.body.classList.add('dark');
         themeToggle.innerHTML = '🌙';
       } else {
         darkMode = false;
-        document.body.style.backgroundColor = '#f4f7fa';
-        document.body.style.color = '#333';
+        document.body.classList.remove('dark');
         themeToggle.innerHTML = '☀️';
       }
       input.focus();
