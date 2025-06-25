@@ -163,12 +163,10 @@ HTML_PAGE = """
       const bubble = document.createElement('div');
       bubble.className = 'bubble ' + sender;
       if (sender === 'bot') {
-        const avatar = document.createElement('span');
-        avatar.innerText = '🤖';
-        avatar.style.marginRight = '8px';
-        bubble.appendChild(avatar);
+        bubble.innerHTML = marked.parse(text);
+      } else {
+        bubble.innerText = text;
       }
-      bubble.innerHTML += text;
       const time = document.createElement('div');
       time.style.fontSize = '0.75em';
       time.style.color = '#888';
