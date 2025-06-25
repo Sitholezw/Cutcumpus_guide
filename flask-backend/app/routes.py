@@ -166,14 +166,16 @@ HTML_PAGE = """
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question })
         });
+        if (!res.ok) throw new Error('Server error');
         const data = await res.json();
         hideTyping();
         addBubble(data.answer, 'bot');
       } catch (e) {
         hideTyping();
-        addBubble("Sorry, something went wrong.", 'bot');
+        addBubble("Sorry, something went wrong. Please try again later.", 'bot');
       }
       sendBtn.disabled = false;
+      input.focus();
     }
 
     window.onload = () => {
