@@ -115,6 +115,15 @@ HTML_PAGE = """
     const sendBtn = document.getElementById('sendBtn');
     sendBtn.disabled = true;
 
+    function saveHistory() {
+      localStorage.setItem('chatHistory', chatbox.innerHTML);
+    }
+
+    function loadHistory() {
+      const history = localStorage.getItem('chatHistory');
+      if (history) chatbox.innerHTML = history;
+    }
+
     function addBubble(text, sender) {
       const bubble = document.createElement('div');
       bubble.className = 'bubble ' + sender;
@@ -127,6 +136,7 @@ HTML_PAGE = """
       bubble.appendChild(time);
       chatbox.appendChild(bubble);
       chatbox.scrollTop = chatbox.scrollHeight;
+      saveHistory();
     }
 
     function showTyping() {
@@ -167,7 +177,10 @@ HTML_PAGE = """
     }
 
     window.onload = () => {
-      addBubble("Hi! I'm your CUT FAQ assistant. Ask me anything about the application process.", 'bot');
+      loadHistory();
+      if (!chatbox.innerHTML) {
+        addBubble("Hi! I'm your CUT FAQ assistant. Ask me anything about the application process.", 'bot');
+      }
       input.focus();
     };
   </script>
