@@ -126,7 +126,79 @@
     {
       "question": "How do I create a strong recommended password ?",
       "answer": "Follow instructions from the password hint.<br>Your password should contain a number, upper case character, lower case character, special character.<br>If there is still a red color on the password requirement field type that means the password is lacking that specific red character."
-    }
-
-  
+    },
+  {
+    "question": "I cannot log in into the system?",
+    "answer": "Connect to the internet (via a wired connection). Open any web browser of your choice. Log on to the UIS platform accessible on uis.cut.ac.zw through any web browser or login to the staff portal and select marks capturing portal under quick academic links. A successful login will direct you to the UIS system."
+  },
+  {
+    "question": "Students list not showing for the module that I want to capture marks. How do I make them appear on display?",
+    "answer": "Verify and ensure the following with your AR: Is the period registered by the student the same as the period you want to capture marks in? Is the module code registered by the student the same as the module code you want to capture marks for?"
+  },
+  {
+    "question": "The Chairperson cannot see the module that I locked. How can we solve this problem?",
+    "answer": "The reason for this anomaly is that you did not lock your marks after capturing them. To ensure this doesn't happen, log on to the UIS platform accessible on uis.cut.ac.zw or login to the staff portal and select marks capturing portal under quick academic links. Click on the manage exams option on the main menu, then click on marks capturing. Select department and period, then click on the red key icon on the affected module to submit."
+  },
+  {
+    "question": "I have students on attachment whose modules do not require coursework, but I am seeing the coursework column. How can I enter their grades?",
+    "answer": "Click on the disregard coursework button, the system will automatically disable the coursework column."
+  },
+  {
+    "question": "How do I assign lecturers the right to capture marks?",
+    "answer": "Ensure that you have chairperson's rights. Log on to the UIS platform accessible on uis.cut.ac.zw or login to the staff portal and select marks capturing portal under quick academic links. Click on the Assign Rights option located on the left section of your screen. Provide lecturer parameters in respect of period, duration rights should be granted, and the module, then click add to Cart."
+  },
+  {
+    "question": "How do I check modules submitted by lecturers?",
+    "answer": "Click the verify results button, then click the module submission button. Select the period for which you want to check the modules submitted. When you are satisfied with the lecturer's work, click the synchronize button to submit the marks to the Eagle system."
+  },
+  {
+    "question": "As a Chairperson, I can't find the module to give to the Lecturer. How can I solve this?",
+    "answer": "Go to your profile and check your department. Add the correct department where the module is located and click the Update Profile button to refresh the page. Return to the mark capture page by clicking the mark capturing link. Go through the process of assigning rights again and verify that the module is found."
+  },
+  {
+    "question": "How can I track my application?",
+    "answer": "To track your application you need to go to the CUT website (www.cut.ac.zw) using any web browser. On your bottom right click track application, enter your credentials (ID number and password), and click complete."
+  },
+  {
+    "question": "How do I apply online?",
+    "answer": "Go to the CUT website (www.cut.ac.zw). On your bottom right click apply. Provide the necessary information requested (Period being applied for, level (undergrad or postgrad), Entry type and attendance type) and click next. Select 3 programme choices and click next. Enter personal details and click next. Make your payment and proceed with your application."
+  },
+  {
+    "question": "How do I retrieve my reg number?",
+    "answer": "To retrieve your reg number you need to go to the CUT website (cut.ac.zw) using any web browser. On your bottom right click track application. Enter your credentials (ID number and password), click complete, accept your offer by agreeing to the terms and conditions, enter your current password, then take note of the reg number displayed where the application number was previously displayed."
+  },
+  {
+    "question": "How do I enter my national ID?",
+    "answer": "The first 2 digits should be entered into the first box of the national ID text area. Make sure that the letter of your ID number goes into the third box. The last 2 digits go into the last box. The remaining digits go into the main body in the second box."
+  },
+  {
+    "question": "How do I create a strong recommended password?",
+    "answer": "Follow instructions from the password hint. Your password should contain a number, an uppercase character, a lowercase character, and a special character. If there is still a red color on the password requirement field, it means the password is missing that specific red character."
+  },
+  {
+    "question": "Why can't I just type the subject that I want and it appears instead of scrolling down?",
+    "answer": "The system has subjects embedded within it so if a subject is typed incorrectly, the system will not recognize it. There is a need for consistency throughout the system, so the dropdown menu is ideal."
+  },
+  {
+    "question": "Why do I have to fill in the survey after the application process is complete?",
+    "answer": "As a University we constantly need your validation on our system. It is ideal for us to have the data so that we know how best we can serve you."
+  },
+  {
+    "question": "How do I register online?",
+    "answer": "Go to the CUT website (www.cut.ac.zw), select the heading that reads Students. On the drop-down menu click E-learning. Enter your Reg-Number and password and click Login. Click the register button after confirming modules that are being offered for your level. Once you are in your portal that means you are registered."
+  },
+  {
+    "question": "How do I know if I am registered?",
+    "answer": "Log into your Self Service Portal. When there is no register button available that means you are registered."
+  },
+  {
+    "question": "How to solve WIFI login credentials problem?",
+    "answer": "Go to your student portal and reset your password."
+  },
+  {
+    "question": "How to create a student portal?",
+    "answer": "If you have applied online, the portal is created automatically. Use your registration number as username and the password you used to apply as password to login to the portal. If you applied manually, on the portal login page, click signup to create the portal."
+  }
 ]
+
+
