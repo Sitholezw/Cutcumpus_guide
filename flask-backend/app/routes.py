@@ -1,10 +1,15 @@
 from flask import Blueprint, request, jsonify, current_app, render_template_string
 import difflib
+from sentence_transformers import SentenceTransformer
+import numpy as np
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
 
 bp = Blueprint('routes', __name__)
+
+# Load the embedding model once at startup
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 HTML_PAGE = """
 <!DOCTYPE html>
@@ -441,3 +446,20 @@ def ask():
             if faq['question'] == matches[0]:
                 return jsonify({'answer': faq['answer']})
     return jsonify({'answer': "Sorry, I couldn't find an answer to your question."}), 404
+
+def get_qa_data():
+    # Use the loaded FAQ data from config
+    return current_app.config['FAQS_DATA']
+
+def get_question_embeddings(qa_data):
+    questions = [item["question"] for item in qa_data]
+    return model.encode(questions)
+
+def cosine_sim(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+def search_answer(user_question, qa_data, question_embeddings, top_k=1):
+    user_embedding = model.encode([user_question])[0]
+    scores = [cosine_sim(user_embedding, q_emb) for q_emb in question_embeddings]
+    top_indices = np.argsort(scores)[::-1][:top_k]
+    return [qa_data[i] for i in top_indices if scores[i] > 0.5]  # Only return if similarity is reasonable
