@@ -11,62 +11,117 @@ HTML_PAGE = """
 <html>
 <head>
   <title>FAQ Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
-      --bg: #f4f7fa;
-      --bubble-bot: #e9ecef;
-      --bubble-user: #0078d7;
+      --bg: linear-gradient(135deg, #e0e7ff 0%, #f4f7fa 100%);
+      --bubble-bot: #f1f5fb;
+      --bubble-user: #2563eb;
+      --bubble-shadow: 0 2px 8px rgba(0,0,0,0.07);
       --text: #222;
+      --bot-avatar-bg: #2563eb;
+      --bot-avatar-color: #fff;
     }
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 0;
-      min-height: 100vh;
+      transition: background 0.3s;
     }
     h1 {
       margin-top: 40px;
-      color: #333;
+      color: #222;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     #chatbox {
       width: 100%;
       max-width: 420px;
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      padding: 24px 18px 18px 18px;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 28px 18px 18px 18px;
       margin: 30px 0 0 0;
-      min-height: 320px;
+      min-height: 340px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 14px;
+      overflow-y: auto;
+      transition: box-shadow 0.2s;
     }
     .bubble {
       max-width: 80%;
-      padding: 12px 18px;
-      border-radius: 18px;
+      padding: 14px 20px;
+      border-radius: 22px;
       margin-bottom: 6px;
       font-size: 1rem;
-      line-height: 1.5;
+      line-height: 1.6;
       word-break: break-word;
-      display: inline-block;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: flex-end;
+      box-shadow: var(--bubble-shadow);
+      position: relative;
+      opacity: 0;
+      animation: fadeIn 0.4s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
     .user {
       align-self: flex-end;
       background: var(--bubble-user);
       color: #fff;
-      border-bottom-right-radius: 6px;
+      border-bottom-right-radius: 8px;
+      justify-content: flex-end;
     }
     .bot {
       align-self: flex-start;
       background: var(--bubble-bot);
       color: var(--text);
-      border-bottom-left-radius: 6px;
+      border-bottom-left-radius: 8px;
+      justify-content: flex-start;
+    }
+    .bot-avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--bot-avatar-bg);
+      color: var(--bot-avatar-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3em;
+      margin-right: 10px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 4px rgba(37,99,235,0.10);
+    }
+    .bubble-content {
+      flex: 1;
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      color: #2563eb;
+      font-size: 0.9em;
+      cursor: pointer;
+      margin-left: 8px;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .copy-btn:hover {
+      color: #1e40af;
+    }
+    .timestamp {
+      font-size: 0.75em;
+      color: #888;
+      margin-top: 4px;
+      margin-left: 2px;
     }
     #inputArea {
       width: 100%;
@@ -74,75 +129,151 @@ HTML_PAGE = """
       display: flex;
       gap: 8px;
       margin-top: 18px;
+      align-items: center;
     }
     #questionInput {
       flex: 1;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1.5px solid #c7d2fe;
       font-size: 1rem;
       outline: none;
       transition: border 0.2s;
+      background: #f8fafc;
     }
     #questionInput:focus {
-      border: 1.5px solid #0078d7;
+      border: 1.5px solid #2563eb;
+      background: #fff;
     }
     #sendBtn {
-      background: #0078d7;
+      background: #2563eb;
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 0 22px;
       font-size: 1rem;
       cursor: pointer;
       transition: background 0.2s;
+      height: 44px;
     }
-    #sendBtn:hover {
-      background: #005fa3;
+    #sendBtn:disabled {
+      background: #a5b4fc;
+      cursor: not-allowed;
+    }
+    #sendBtn:hover:not(:disabled) {
+      background: #1e40af;
     }
     #faqSuggestions {
-      margin-top: 10px;
-      font-size: 0.9rem;
+      margin-top: 18px;
+      font-size: 0.98rem;
       color: #555;
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
     #faqSuggestions button {
-      background: #e1f5fe;
-      color: #01579b;
-      border: 1px solid #b3e5fc;
+      background: #e0e7ff;
+      color: #2563eb;
+      border: 1px solid #c7d2fe;
       border-radius: 8px;
       padding: 8px 12px;
-      margin-right: 8px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-size: 0.98em;
+    }
+    #faqSuggestions button:hover {
+      background: #c7d2fe;
+      color: #1e40af;
+    }
+    #themeToggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 1.3em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
       cursor: pointer;
       transition: background 0.2s;
     }
-    #faqSuggestions button:hover {
-      background: #b3e5fc;
+    #themeToggle:hover {
+      background: #e0e7ff;
     }
     @media (max-width: 500px) {
-      #chatbox, #inputArea {
+      #chatbox, #inputArea, #faqSuggestions {
         max-width: 98vw;
         padding: 0 2vw;
       }
+      h1 {
+        font-size: 1.2em;
+      }
+    }
+    body.dark {
+      --bg: linear-gradient(135deg, #23272a 0%, #181a1b 100%);
+      --bubble-bot: #23272a;
+      --bubble-user: #1e40af;
+      --text: #f4f7fa;
+      --bot-avatar-bg: #1e40af;
+      --bot-avatar-color: #fff;
+    }
+    body.dark #chatbox {
+      background: #181a1b;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    body.dark #questionInput {
+      background: #23272a;
+      color: #f4f7fa;
+      border: 1.5px solid #374151;
+    }
+    body.dark #questionInput:focus {
+      background: #181a1b;
+      border: 1.5px solid #2563eb;
+    }
+    body.dark #sendBtn {
+      background: #1e40af;
+    }
+    body.dark #sendBtn:hover:not(:disabled) {
+      background: #2563eb;
+    }
+    body.dark #faqSuggestions button {
+      background: #23272a;
+      color: #a5b4fc;
+      border: 1px solid #374151;
+    }
+    body.dark #faqSuggestions button:hover {
+      background: #1e293b;
+      color: #fff;
+    }
+    body.dark #themeToggle {
+      background: #23272a;
+      color: #a5b4fc;
+    }
+    body.dark #themeToggle:hover {
+      background: #1e293b;
     }
   </style>
 </head>
 <body>
   <h1>Ask us anything</h1>
+  <button id="themeToggle" title="Toggle theme">🌙</button>
   <div id="chatbox"></div>
   <div id="inputArea">
-    <input id="questionInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){sendQuestion();}" aria-label="Type your question" />
+    <input id="questionInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){sendQuestion();}" aria-label="Type your question" autocomplete="off" />
     <button id="sendBtn" onclick="sendQuestion()">Send</button>
-    <input type="file" id="fileInput" style="display:none" onchange="sendFile()" />
-    <button onclick="document.getElementById('fileInput').click()">📎</button>
   </div>
   <div id="faqSuggestions">
-    <strong>Popular questions:</strong>
+    <strong style="margin-right:8px;">Popular:</strong>
     <button onclick="quickAsk('How do I retrieve my reg number?')">How do I retrieve my reg number?</button>
     <button onclick="quickAsk('How do I accept my offer?')">How do I accept my offer?</button>
-    <!-- Add more as needed -->
+    <button onclick="quickAsk('How do I create a strong recommended password ?')">Strong password?</button>
+    <button onclick="quickAsk('I cannot log in into the system?')">Cannot log in?</button>
   </div>
-  <button id="themeToggle" style="position:absolute;top:10px;right:10px;">🌙</button>
-
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const chatbox = document.getElementById('chatbox');
@@ -153,7 +284,6 @@ HTML_PAGE = """
     function saveHistory() {
       localStorage.setItem('chatHistory', chatbox.innerHTML);
     }
-
     function loadHistory() {
       const history = localStorage.getItem('chatHistory');
       if (history) chatbox.innerHTML = history;
@@ -163,16 +293,42 @@ HTML_PAGE = """
       const bubble = document.createElement('div');
       bubble.className = 'bubble ' + sender;
       if (sender === 'bot') {
-        bubble.innerHTML = marked.parse(text);
+        // Bot avatar
+        const avatar = document.createElement('div');
+        avatar.className = 'bot-avatar';
+        avatar.innerText = '🤖';
+        bubble.appendChild(avatar);
+
+        // Bubble content
+        const content = document.createElement('div');
+        content.className = 'bubble-content';
+        content.innerHTML = marked.parse(text);
+
+        // Copy button
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.innerText = 'Copy';
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(content.innerText);
+          copyBtn.innerText = 'Copied!';
+          setTimeout(() => copyBtn.innerText = 'Copy', 1000);
+        };
+        content.appendChild(copyBtn);
+
+        // Timestamp
+        const time = document.createElement('div');
+        time.className = 'timestamp';
+        time.innerText = new Date().toLocaleTimeString();
+        content.appendChild(time);
+
+        bubble.appendChild(content);
       } else {
         bubble.innerText = text;
+        const time = document.createElement('div');
+        time.className = 'timestamp';
+        time.innerText = new Date().toLocaleTimeString();
+        bubble.appendChild(time);
       }
-      const time = document.createElement('div');
-      time.style.fontSize = '0.75em';
-      time.style.color = '#888';
-      time.style.marginTop = '2px';
-      time.innerText = new Date().toLocaleTimeString();
-      bubble.appendChild(time);
       chatbox.appendChild(bubble);
       chatbox.scrollTop = chatbox.scrollHeight;
       saveHistory();
@@ -182,11 +338,10 @@ HTML_PAGE = """
       const typing = document.createElement('div');
       typing.id = 'typing-indicator';
       typing.className = 'bubble bot';
-      typing.innerText = 'Bot is typing...';
+      typing.innerHTML = '<div class="bot-avatar">🤖</div><div class="bubble-content">Bot is typing...</div>';
       chatbox.appendChild(typing);
       chatbox.scrollTop = chatbox.scrollHeight;
     }
-
     function hideTyping() {
       const typing = document.getElementById('typing-indicator');
       if (typing) typing.remove();
@@ -217,86 +372,31 @@ HTML_PAGE = """
       input.focus();
     }
 
-    function sendFile() {
-      const fileInput = document.getElementById('fileInput');
-      const file = fileInput.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const content = e.target.result;
-        addBubble("File received: " + file.name, 'user');
-        showTyping();
-        try {
-          const res = await fetch('/ask', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: content })
-          });
-          if (!res.ok) throw new Error('Server error');
-          const data = await res.json();
-          hideTyping();
-          addBubble(data.answer, 'bot');
-        } catch (e) {
-          hideTyping();
-          addBubble("Sorry, something went wrong with the file. Please try again later.", 'bot');
-        }
-      };
-      reader.readAsText(file);
-    }
-
     function quickAsk(question) {
-      addBubble(question, 'user');
-      input.value = '';
-      showTyping();
-      sendBtn.disabled = true;
-      fetch('/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question })
-      })
-      .then(res => {
-        if (!res.ok) throw new Error('Server error');
-        return res.json();
-      })
-      .then(data => {
-        hideTyping();
-        addBubble(data.answer, 'bot');
-      })
-      .catch(e => {
-        hideTyping();
-        addBubble("Sorry, something went wrong. Please try again later.", 'bot');
-      })
-      .finally(() => {
-        sendBtn.disabled = false;
-        input.focus();
-      });
+      input.value = question;
+      sendQuestion();
     }
 
-    window.onload = () => {
-      loadHistory();
-      if (!chatbox.innerHTML) {
-        addBubble("Hi! I'm your CUT FAQ assistant. Ask me anything about the application process.", 'bot');
-      }
-      input.focus();
-    };
+    // Enable send button only if input is not empty
+    input.addEventListener('input', () => {
+      sendBtn.disabled = input.value.trim().length === 0;
+    });
 
-    // Theme toggle script
+    // Theme toggle
     const themeToggle = document.getElementById('themeToggle');
     let darkMode = false;
-
     themeToggle.onclick = () => {
       darkMode = !darkMode;
       if (darkMode) {
         document.body.classList.add('dark');
-        themeToggle.innerHTML = '🌙';
+        themeToggle.innerHTML = '☀️';
         localStorage.setItem('darkMode', 'true');
       } else {
         document.body.classList.remove('dark');
-        themeToggle.innerHTML = '☀️';
+        themeToggle.innerHTML = '🌙';
         localStorage.setItem('darkMode', 'false');
       }
     };
-
     // Load dark mode preference
     window.onload = () => {
       loadHistory();
@@ -304,11 +404,14 @@ HTML_PAGE = """
       if (darkModePreference === 'true') {
         darkMode = true;
         document.body.classList.add('dark');
-        themeToggle.innerHTML = '🌙';
+        themeToggle.innerHTML = '☀️';
       } else {
         darkMode = false;
         document.body.classList.remove('dark');
-        themeToggle.innerHTML = '☀️';
+        themeToggle.innerHTML = '🌙';
+      }
+      if (!chatbox.innerHTML) {
+        addBubble("Hi! I'm your CUT FAQ assistant. Ask me anything about the application process.", 'bot');
       }
       input.focus();
     };
