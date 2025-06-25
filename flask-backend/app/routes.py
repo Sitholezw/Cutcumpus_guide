@@ -105,7 +105,7 @@ HTML_PAGE = """
   <h1>Ask us anything</h1>
   <div id="chatbox"></div>
   <div id="inputArea">
-    <input id="questionInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){sendQuestion();}" />
+    <input id="questionInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){sendQuestion();}" aria-label="Type your question" />
     <button id="sendBtn" onclick="sendQuestion()">Send</button>
   </div>
 
