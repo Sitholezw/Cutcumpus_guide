@@ -433,19 +433,14 @@ def index():
 def ask():
     data = request.get_json()
     question = data.get('question', '').strip()
-    faqs = current_app.config['FAQS_DATA']
+    qa_data = get_qa_data()
+    question_embeddings = get_question_embeddings(qa_data)
 
-    # Extract all FAQ questions
-    faq_questions = [faq['question'] for faq in faqs]
-
-    # Use difflib to find the closest match
-    matches = difflib.get_close_matches(question, faq_questions, n=1, cutoff=0.5)
+    matches = search_answer(question, qa_data, question_embeddings, top_k=1)
     if matches:
-        # Find the answer for the best match
-        for faq in faqs:
-            if faq['question'] == matches[0]:
-                return jsonify({'answer': faq['answer']})
-    return jsonify({'answer': "Sorry, I couldn't find an answer to your question."}), 404
+        return jsonify({'answer': matches[0]['answer']})
+    else:
+        return jsonify({'answer': "Sorry, I couldn't find an answer to your question."}), 404
 
 def get_qa_data():
     # Use the loaded FAQ data from config
