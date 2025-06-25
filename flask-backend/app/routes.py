@@ -275,7 +275,7 @@ HTML_PAGE = """<!DOCTYPE html>
   </style>
 </head>
 <body>
-  <h1>Ask us anything</h1>
+  <h1>CUT CHATBOT</h1>
   <button id="themeToggle" title="Toggle theme">🌙</button>
   <div id="chatbox"></div>
   <div id="inputArea">
@@ -289,6 +289,9 @@ HTML_PAGE = """<!DOCTYPE html>
     <button onclick="quickAsk('How do I create a strong recommended password ?')">Strong password?</button>
     <button onclick="quickAsk('I cannot log in into the system?')">Cannot log in?</button>
   </div>
+  <div id="loadingOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#fff;z-index:9999;">
+  <h2 style="text-align:center;">Loading AI model, please wait...</h2>
+</div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const chatbox = document.getElementById('chatbox');
@@ -433,17 +436,19 @@ HTML_PAGE = """<!DOCTYPE html>
 
     async function waitForModel() {
       let ready = false;
+      const overlay = document.getElementById('loadingOverlay');
       while (!ready) {
         const res = await fetch('/model_status');
         const data = await res.json();
         ready = data.ready;
         if (!ready) {
-          document.body.innerHTML = "<h2 style='text-align:center;margin-top:40px;'>Loading AI model, please wait...</h2>";
+          overlay.style.display = 'flex';
           await new Promise(r => setTimeout(r, 1500));
         }
       }
-      
+      overlay.style.display = 'none';
     }
+
     waitForModel();
   </script>
 </body>
@@ -511,9 +516,9 @@ def cosine_sim(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 def search_answer(user_question, qa_data, question_embeddings, top_k=1):
-    user_embedding = model.encode([user_question])[0]
-    scores = [cosine_sim(user_embedding, q_emb) for q_emb in question_embeddings]
-    top_indices = np.argsort(scores)[::-1][:top_k]
+    user_embedding = model.encode([user_question])[0];
+    scores = [cosine_sim(user_embedding, q_emb) for q_emb in question_embeddings];
+    top_indices = np.argsort(scores)[::-1][:top_k];
     return [qa_data[i] for i in top_indices]
 
 # Register blueprint in your app.py or main file
