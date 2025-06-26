@@ -280,7 +280,7 @@ HTML_PAGE = """<!DOCTYPE html>
       background: #1e293b;
     }
     body.dark #headman {
-      color: #fff;
+      color: #222;
     }
 
     /* Responsive styles for mobile */
