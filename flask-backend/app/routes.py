@@ -512,8 +512,12 @@ def ask():
 def health():
     return jsonify({'status': 'ok'})
 
+ADMIN_PASSWORD = "Test@12345"  # Set a strong password!
+
 @bp.route('/admin', methods=['GET'])
 def admin_page():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return "Unauthorized", 401
     return render_template_string("""
     <h2>FAQ Admin Panel</h2>
     <form id="faqForm">
@@ -543,6 +547,8 @@ def admin_page():
 
 @bp.route('/admin/add', methods=['POST'])
 def admin_add():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return jsonify({'status': 'unauthorized'}), 401
     data = request.get_json()
     FAQS_DATA.append({'question': data['question'], 'answer': data['answer']})
     global question_embeddings_cache
