@@ -668,6 +668,11 @@ def admin_page():
       <input name="category" placeholder="Category">
       <button type="submit">Add FAQ</button>
     </form>
+    <form id="pdfForm" enctype="multipart/form-data" style="margin-bottom:18px;">
+  <label style="font-weight:600;">Import FAQs from PDF:</label>
+  <input type="file" name="pdf" accept="application/pdf" required>
+  <button type="submit">Upload PDF</button>
+</form>
     <input id="faqSearch" placeholder="Search FAQs...">
     <ul id="faqList" class="faq-list">
       {% for faq in faqs %}
@@ -846,12 +851,12 @@ def admin_upload_pdf():
     while i < len(lines):
         if lines[i].lower().startswith('q:'):
             question = lines[i][2:].strip()
-            answer = ""
+            answer = "";
             if i+1 < len(lines) and lines[i+1].lower().startswith('a:'):
-                answer = lines[i+1][2:].strip()
-                i += 1
-            new_faqs.append({'question': question, 'answer': answer, 'category': ''})
-        i += 1
+                answer = lines[i+1][2:].strip();
+                i += 1;
+            new_faqs.append({'question': question, 'answer': answer, 'category': ''});
+        i += 1;
 
     # Add to FAQS_DATA and save
     FAQS_DATA.extend(new_faqs)
