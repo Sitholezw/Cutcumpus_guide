@@ -423,8 +423,12 @@ HTML_PAGE = """<!DOCTYPE html>
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question })
         });
-        if (!res.ok) throw new Error('Server error');
-        const data = await res.json();
+        let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          data = { answer: "Sorry, something went wrong. Please try again later." };
+        }
         hideTyping();
         addBubble(data.answer, 'bot');
       } catch (e) {
@@ -509,7 +513,7 @@ def ask():
     # Log the question
     with open('question_log.txt', 'a', encoding='utf-8') as logf:
         logf.write(f"{datetime.datetime.now().isoformat()} - {question}\n")
-    threshold = 0.75  # You can adjust this value
+    threshold = 0.70  # You can adjust this value
     results = search_answer(question, FAQS_DATA, question_embeddings_cache, top_k=1)
     if results and results[0][1] >= threshold:
         return jsonify({'answer': results[0][0]['answer']})

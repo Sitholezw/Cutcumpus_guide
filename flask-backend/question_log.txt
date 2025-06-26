@@ -19,3 +19,28 @@
 2025-06-26T17:16:54.773066 - entry type
 2025-06-26T20:31:26.571067 - Do you offer campus tour
 2025-06-26T20:31:52.938084 - who created you
+2025-06-26T20:38:22.070952 - who are you
+2025-06-26T20:38:51.394155 - when are the schools opening
+2025-06-26T20:38:57.317267 - How do I accept my offer?
+2025-06-26T20:40:49.147581 - who created you
+2025-06-26T20:41:01.220148 - medical aid
+2025-06-26T20:43:13.153780 - I cannot log in into the system?
+2025-06-26T20:43:28.248094 - wod
+2025-06-26T20:43:41.774987 - where is cut
+2025-06-26T20:48:13.385945 - kkk
+2025-06-26T20:48:39.411822 - who created you?
+2025-06-26T20:48:59.121225 - medical aid
+2025-06-26T20:49:11.233989 - do you offer medical aid
+2025-06-26T20:49:15.358534 - How do I retrieve my reg number?
+2025-06-26T20:49:34.319632 - food
+2025-06-26T20:49:45.209226 - do you have a dh
+2025-06-26T20:50:07.139420 - how do i apply at cut
+2025-06-26T20:56:06.989609 - medical aid
+2025-06-26T20:56:21.901894 - who created you
+2025-06-26T20:56:42.174983 - do you offer food and accommmodation
+2025-06-26T20:57:11.093524 - what is Esadza
+2025-06-26T20:59:35.706315 - where is cut
+2025-06-26T20:59:53.299048 - where is cut located
+2025-06-26T21:00:19.838494 - where are you located
+2025-06-26T21:04:58.923314 - what are the entry requirements
+2025-06-26T21:05:39.466886 - what are the entry requirements at cut
