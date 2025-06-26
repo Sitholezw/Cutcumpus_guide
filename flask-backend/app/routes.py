@@ -245,8 +245,10 @@ HTML_PAGE = """<!DOCTYPE html>
       --bot-avatar-color: #fff;
     }
     body.dark #chatbox {
-      background: #181a1b;
+      background: rgba(24, 26, 27, 0.55); /* semi-transparent dark */
       box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     body.dark #questionInput {
       background: #23272a;
