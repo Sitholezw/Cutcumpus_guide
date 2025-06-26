@@ -17,3 +17,5 @@
 2025-06-26T17:15:26.661112 - entry types
 2025-06-26T17:16:01.504165 - entry types
 2025-06-26T17:16:54.773066 - entry type
+2025-06-26T20:31:26.571067 - Do you offer campus tour
+2025-06-26T20:31:52.938084 - who created you
