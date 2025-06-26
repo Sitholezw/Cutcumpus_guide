@@ -509,10 +509,11 @@ def ask():
     # Log the question
     with open('question_log.txt', 'a', encoding='utf-8') as logf:
         logf.write(f"{datetime.datetime.now().isoformat()} - {question}\n")
-    matches = search_answer(question, FAQS_DATA, question_embeddings_cache, top_k=1)
-    if matches:
-        return jsonify({'answer': matches[0]['answer']})
-    return jsonify({'answer': "Sorry, I couldn't find an answer to your question."}), 404
+    threshold = 0.75  # You can adjust this value
+    results = search_answer(question, FAQS_DATA, question_embeddings_cache, top_k=1)
+    if results and results[0][1] >= threshold:
+        return jsonify({'answer': results[0][0]['answer']})
+    return jsonify({'answer': "Sorry, I couldn't find an answer to your question kindly get in touch with the helpdesk at +263672127433."}), 404
 
 @bp.route('/health')
 def health():
