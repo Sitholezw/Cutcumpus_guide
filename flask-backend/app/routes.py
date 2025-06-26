@@ -522,63 +522,214 @@ def admin_page():
     if request.args.get("pw") != ADMIN_PASSWORD:
         return "Unauthorized", 401
     return render_template_string("""
+<!DOCTYPE html>
+<html>
+<head>
+  <title> CUT | FAQ Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f7fa;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 32px 28px 24px 28px;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 2em;
+      letter-spacing: 1px;
+      color: #2563eb;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      align-items: flex-end;
+    }
+    form input, form select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1.5px solid #c7d2fe;
+      font-size: 1em;
+      flex: 1 1 180px;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    form input:focus, form select:focus {
+      border: 1.5px solid #2563eb;
+      background: #fff;
+      outline: none;
+    }
+    form button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    form button:hover {
+      background: #1e40af;
+    }
+    #faqSearch {
+      width: 100%;
+      margin-bottom: 18px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1.5px solid #c7d2fe;
+      font-size: 1em;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    #faqSearch:focus {
+      border: 1.5px solid #2563eb;
+      background: #fff;
+      outline: none;
+    }
+    .faq-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .faq-item {
+      background: #f1f5fb;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      position: relative;
+    }
+    .faq-actions {
+      margin-top: 6px;
+      display: flex;
+      gap: 10px;
+    }
+    .faq-actions button {
+      background: #fff;
+      color: #2563eb;
+      border: 1px solid #c7d2fe;
+      border-radius: 6px;
+      padding: 5px 14px;
+      font-size: 0.98em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .faq-actions button:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+    .export-btn {
+      float: right;
+      margin-top: -38px;
+      margin-bottom: 18px;
+      background: #e0e7ff;
+      color: #2563eb;
+      border: 1px solid #c7d2fe;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .export-btn:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 12px 2vw; }
+      form { flex-direction: column; gap: 8px; }
+      .export-btn { float: none; display: block; width: 100%; margin: 0 0 18px 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
     <h2>FAQ Admin Panel</h2>
+    <a href="/admin/export?pw={{request.args.get('pw')}}" class="export-btn" download>⬇️ Download FAQs (JSON)</a>
     <form id="faqForm">
-      <input name="question" placeholder="Question" style="width:300px" required>
-      <input name="answer" placeholder="Answer" style="width:300px" required>
-      <input name="category" placeholder="Category" style="width:200px">
+      <input name="question" placeholder="Question" required>
+      <input name="answer" placeholder="Answer" required>
+      <input name="category" placeholder="Category">
       <button type="submit">Add FAQ</button>
     </form>
-    <input id="faqSearch" placeholder="Search FAQs..." style="width:300px;margin-bottom:10px;">
-    <ul id="faqList">
+    <input id="faqSearch" placeholder="Search FAQs...">
+    <ul id="faqList" class="faq-list">
       {% for faq in faqs %}
-        <li>
-          <b>{{faq.question}}</b> ({{faq.category}}): {{faq.answer}}
-          <button onclick="editFAQ({{loop.index0}})">Edit</button>
-          <button onclick="deleteFAQ({{loop.index0}})">Delete</button>
+        <li class="faq-item">
+          <div><b>Q:</b> {{faq.question}}</div>
+          <div><b>A:</b> {{faq.answer}}</div>
+          <div><b>Category:</b> {{faq.category}}</div>
+          <div class="faq-actions">
+            <button onclick="editFAQ({{loop.index0}})">Edit</button>
+            <button onclick="deleteFAQ({{loop.index0}})">Delete</button>
+          </div>
         </li>
       {% endfor %}
     </ul>
-    <script>
-      document.getElementById('faqForm').onsubmit = async function(e) {
-        e.preventDefault();
-        const form = e.target;
-        const res = await fetch('/admin/add?pw={{request.args.get('pw')}}', {
+  </div>
+  <script>
+    const faqs = {{ faqs|tojson }};
+    document.getElementById('faqForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const res = await fetch('/admin/add?pw={{request.args.get('pw')}}', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          question: form.question.value,
+          answer: form.answer.value,
+          category: form.category.value
+        })
+      });
+      if (res.ok) location.reload();
+      else alert('Failed to add FAQ');
+    };
+    document.getElementById('faqSearch').oninput = function() {
+      const val = this.value.toLowerCase();
+      document.querySelectorAll('#faqList .faq-item').forEach(li => {
+        li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none';
+      });
+    };
+    window.editFAQ = function(idx) {
+      const q = prompt('Edit question:', faqs[idx].question);
+      const a = prompt('Edit answer:', faqs[idx].answer);
+      const c = prompt('Edit category:', faqs[idx].category || '');
+      if (q && a) {
+        fetch('/admin/edit?pw={{request.args.get("pw")}}', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ question: form.question.value, answer: form.answer.value, category: form.category.value })
-        });
-        if (res.ok) location.reload();
-        else alert('Failed to add FAQ');
+          body: JSON.stringify({index: idx, question: q, answer: a, category: c})
+        }).then(r => location.reload());
       }
-      document.getElementById('faqSearch').oninput = function() {
-        const val = this.value.toLowerCase();
-        document.querySelectorAll('#faqList li').forEach(li => {
-          li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none';
-        });
-      };
-      function editFAQ(idx) {
-        const q = prompt('Edit question:', faqs[idx].question);
-        const a = prompt('Edit answer:', faqs[idx].answer);
-        const c = prompt('Edit category:', faqs[idx].category || '');
-        if (q && a) {
-          fetch('/admin/edit?pw={{request.args.get("pw")}}', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({index: idx, question: q, answer: a, category: c})
-          }).then(r => location.reload());
-        }
+    };
+    window.deleteFAQ = function(idx) {
+      if (confirm('Delete this FAQ?')) {
+        fetch('/admin/delete?pw={{request.args.get("pw")}}', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({index: idx})
+        }).then(r => location.reload());
       }
-      function deleteFAQ(idx) {
-        if (confirm('Delete this FAQ?')) {
-          fetch('/admin/delete?pw={{request.args.get("pw")}}', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({index: idx})
-          }).then(r => location.reload());
-        }
-      }
-    </script>
+    };
+  </script>
+</body>
+</html>
     """, faqs=FAQS_DATA)
 
 @bp.route('/admin/add', methods=['POST'])
