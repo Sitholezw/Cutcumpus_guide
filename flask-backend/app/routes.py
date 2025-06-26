@@ -554,6 +554,7 @@ def admin_page():
       padding: 32px 28px 24px 28px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      position: relative;
     }
     h2 {
       margin-top: 0;
@@ -589,112 +590,37 @@ def admin_page():
     .theme-toggle:hover {
       background: #e0e7ff;
     }
-    form {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-      align-items: flex-end;
-    }
-    form input, form select {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1.5px solid #c7d2fe;
-      font-size: 1em;
-      flex: 1 1 180px;
-      background: #f8fafc;
-      transition: border 0.2s;
-    }
-    form input:focus, form select:focus {
-      border: 1.5px solid var(--primary);
-      background: #fff;
-      outline: none;
-    }
-    form button {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 22px;
-      font-size: 1em;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    form button:hover {
-      background: var(--primary-dark);
-    }
-    #faqSearch {
-      width: 100%;
-      margin-bottom: 18px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1.5px solid #c7d2fe;
-      font-size: 1em;
-      background: #f8fafc;
-      transition: border 0.2s;
-    }
-    #faqSearch:focus {
-      border: 1.5px solid var(--primary);
-      background: #fff;
-      outline: none;
-    }
-    .faq-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .faq-item {
-      background: rgba(241,245,251,0.85);
-      border-radius: 10px;
-      margin-bottom: 12px;
-      padding: 16px 14px;
-      display: flex;
-      flex-direction: column;
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      position: relative;
-      transition: background 0.2s;
-    }
-    .faq-actions {
-      margin-top: 6px;
-      display: flex;
-      gap: 10px;
-    }
-    .faq-actions button {
-      background: #fff;
-      color: var(--primary);
-      border: 1px solid #c7d2fe;
-      border-radius: 6px;
-      padding: 5px 14px;
-      font-size: 0.98em;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-    .faq-actions button:hover {
-      background: var(--primary);
-      color: #fff;
-    }
-    .export-btn {
-      float: right;
-      margin-top: -38px;
-      margin-bottom: 18px;
       background: #e0e7ff;
-      color: var(--primary);
+      color: #2563eb;
       border: 1px solid #c7d2fe;
       border-radius: 8px;
       padding: 8px 16px;
       font-size: 1em;
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
+      text-decoration: none;
+      position: absolute;
+      top: 32px;
+      right: 32px;
     }
-    .export-btn:hover {
-      background: var(--primary);
+    .download-btn:hover {
+      background: #2563eb;
       color: #fff;
     }
     @media (max-width: 700px) {
       .container { padding: 12px 2vw; }
-      form { flex-direction: column; gap: 8px; }
-      .export-btn { float: none; display: block; width: 100%; margin: 0 0 18px 0; }
+      .download-btn { 
+        position: static; 
+        display: block; 
+        width: 100%; 
+        margin: 0 0 18px 0; 
+        text-align: center;
+        justify-content: center;
+      }
     }
     /* DARK MODE */
     body.dark {
@@ -713,45 +639,14 @@ def admin_page():
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
-    body.dark h2 {
-      color: var(--primary);
-    }
-    body.dark form input, body.dark form select, body.dark #faqSearch {
-      background: #23272a;
-      color: var(--text);
-      border: 1.5px solid #374151;
-    }
-    body.dark form input:focus, body.dark form select:focus, body.dark #faqSearch:focus {
-      background: #181a1b;
-      border: 1.5px solid var(--primary-dark);
-    }
-    body.dark form button, body.dark .faq-actions button {
-      background: var(--primary-dark);
-      color: #fff;
-    }
-    body.dark form button:hover, body.dark .faq-actions button:hover {
-      background: var(--primary);
-      color: #23272a;
-    }
-    body.dark .faq-item {
-      background: rgba(35,39,42,0.85);
-      color: var(--text);
-    }
-    body.dark .export-btn {
+    body.dark .download-btn {
       background: #23272a;
       color: var(--primary);
       border: 1px solid #374151;
     }
-    body.dark .export-btn:hover {
+    body.dark .download-btn:hover {
       background: var(--primary-dark);
       color: #fff;
-    }
-    body.dark .theme-toggle {
-      background: #23272a;
-      color: var(--primary);
-    }
-    body.dark .theme-toggle:hover {
-      background: #1e293b;
     }
   </style>
 </head>
@@ -762,7 +657,9 @@ def admin_page():
       <img src="{{ url_for('static', filename='assets/images/favicon.png') }}" alt="icon">
       FAQ Admin Panel
     </h2>
-    <a href="/admin/export?pw={{request.args.get('pw')}}" class="export-btn" download>⬇️ Download FAQs (JSON)</a>
+    <a href="/admin/export?pw={{request.args.get('pw')}}" class="download-btn" download>
+      <span>⬇️ Download FAQs (JSON)</span>
+    </a>
     <form id="faqForm">
       <input name="question" placeholder="Question" required>
       <input name="answer" placeholder="Answer" required>
