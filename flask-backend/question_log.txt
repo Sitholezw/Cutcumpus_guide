@@ -9,3 +9,7 @@
 2025-06-26T11:13:44.713562 - how do i check for results
 2025-06-26T11:33:50.860069 - do you offer food
 2025-06-26T11:35:40.436010 - how to apply at cut
+2025-06-26T16:41:34.962625 - How do I create a strong recommended password ?
+2025-06-26T16:41:37.060940 - How do I retrieve my reg number?
+2025-06-26T16:41:39.051655 - How do I accept my offer?
+2025-06-26T16:41:40.988104 - I cannot log in into the system?
