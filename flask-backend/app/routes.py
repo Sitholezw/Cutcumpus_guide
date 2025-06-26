@@ -761,6 +761,22 @@ def admin_page():
         }).then(r => location.reload());
       }
     };
+    document.getElementById('pdfForm').onsubmit = async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const res = await fetch('/admin/upload_pdf?pw={{request.args.get("pw")}}', {
+    method: 'POST',
+    body: formData
+  });
+  const data = await res.json();
+  if (data.status === 'ok') {
+    alert('Imported ' + data.added + ' FAQs from PDF!');
+    location.reload();
+  } else {
+    alert('Error: ' + (data.message || 'Could not import PDF'));
+  }
+};
   </script>
 </body>
 </html>
