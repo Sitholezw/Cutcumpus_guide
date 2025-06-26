@@ -17,7 +17,7 @@
   },
   {
     "question": "how much is the application fee?",
-    "answer": "The application fee for undergraduate is $15 USD or the ZIG equivalent."
+    "answer": "The application fee for undergrade is $15 us or zig eqv."
   },
   {
     "question": "What is the application deadline?",
@@ -250,5 +250,10 @@
   {
     "question": "How do i check for my results",
     "answer": "Kindly log into your Portal and click on results on the left side bar. Kindly note that results are available 7 days only after they are published!"
+  },
+  {
+    "question": "Do you offer food",
+    "answer": "Yes we have a Dining Hall (DH) in the main Campus that offer various nutritious food at the lowest prices usually zig bank rate eqv or $1 usd per meal",
+    "category": "Food and Accommodation"
   }
 ]
