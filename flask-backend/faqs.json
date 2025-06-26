@@ -225,7 +225,7 @@
   },
   {
     "question": "How do I apply for financial aid?",
-    "answer": "Financial aid applications can be submitted through the 'Financial Aid' section of your student portal."
+    "answer": "Visit the Registry and talk to Students Accounts Representatives for assistance ."
   },
   {
     "question": "How do I submit assignments online?",
@@ -238,6 +238,10 @@
   {
     "question": "What should I do if I encounter technical issues with the student portal?",
     "answer": "If you face any technical issues, please contact the ICT Helpdesk at icthelpdesk@cut.ac.zw or call +263 784 840 335 for assistance."
+  },
+   {
+    "question": "How can i register for medical aid ?",
+    "answer": "Kindly vist the Registry with a valid medical aid every semester so that it can be entered into the system and you wont be billed the $20 in your portal."
   }
 ]
 
