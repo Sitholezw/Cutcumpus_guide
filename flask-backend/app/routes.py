@@ -550,10 +550,15 @@ def admin_add():
     if request.args.get("pw") != ADMIN_PASSWORD:
         return jsonify({'status': 'unauthorized'}), 401
     data = request.get_json()
-    FAQS_DATA.append({'question': data['question'], 'answer': data['answer']})
+    question = data.get('question', '').strip()
+    answer = data.get('answer', '').strip()
+    if not question or not answer:
+        return jsonify({'status': 'error', 'message': 'Question and answer required'}), 400
+    if any(faq['question'].lower() == question.lower() for faq in FAQS_DATA):
+        return jsonify({'status': 'error', 'message': 'Duplicate question'}), 400
+    FAQS_DATA.append({'question': question, 'answer': answer})
     global question_embeddings_cache
     question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
-    # Save back to file
     with open('faqs.json', 'w', encoding='utf-8') as f:
         json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
     return jsonify({'status': 'ok'})
