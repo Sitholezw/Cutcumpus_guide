@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app, render_template_stri
 import numpy as np
 import json
 from sentence_transformers import SentenceTransformer
+import datetime
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
@@ -502,7 +503,9 @@ def index():
 def ask():
     data = request.get_json()
     question = data.get('question', '').strip()
-
+    # Log the question
+    with open('question_log.txt', 'a', encoding='utf-8') as logf:
+        logf.write(f"{datetime.datetime.now().isoformat()} - {question}\n")
     matches = search_answer(question, FAQS_DATA, question_embeddings_cache, top_k=1)
     if matches:
         return jsonify({'answer': matches[0]['answer']})
