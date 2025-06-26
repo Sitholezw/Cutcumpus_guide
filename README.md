@@ -20,7 +20,7 @@ A web-based AI-powered FAQ chatbot for the CUT application process. Users can as
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/cut-faq-chatbot.git
+git clone https://github.com/Sitholezw/cut-faq-chatbot.git
 cd cut-faq-chatbot/flask-backend
 ```
 
