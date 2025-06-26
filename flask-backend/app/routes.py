@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 import datetime
 import pdfplumber
 from werkzeug.utils import secure_filename
+import re
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
@@ -865,14 +866,18 @@ def admin_upload_pdf():
     new_faqs = []
     i = 0
     while i < len(lines):
-        if lines[i].lower().startswith('q:'):
-            question = lines[i][2:].strip()
-            answer = "";
-            if i+1 < len(lines) and lines[i+1].lower().startswith('a:'):
-                answer = lines[i+1][2:].strip();
-                i += 1;
-            new_faqs.append({'question': question, 'answer': answer, 'category': ''});
-        i += 1;
+      q_match = re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*(.*)', lines[i], re.I);
+      if q_match:
+        question = q_match.group(2).strip();
+        answer = "";
+        if i+1 < len(lines):
+          a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i+1], re.I);
+          if a_match:
+            answer = a_match.group(2).strip();
+            i += 1;
+        if question and answer:
+          new_faqs.append({'question': question, 'answer': answer, 'category': ''});
+      i += 1;
 
     # Add to FAQS_DATA and save
     FAQS_DATA.extend(new_faqs)

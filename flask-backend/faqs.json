@@ -255,5 +255,10 @@
     "question": "Do you offer food",
     "answer": "Yes we have a Dining Hall (DH) in the main Campus that offer various nutritious food at the lowest prices usually zig bank rate eqv or $1 usd per meal",
     "category": "Food and Accommodation"
+  },
+  {
+    "question": "What entry types are available at CUT",
+    "answer": "Normal Entry :-     You should basically be in possession of 5 Ordinary Level passes, including Mathematics and English (or equivalents).     You should have relevant subject passes at Advanced level as required by the programme you desire to enrol for.",
+    "category": "Enrollment"
   }
 ]
