@@ -526,24 +526,57 @@ def admin_page():
     <form id="faqForm">
       <input name="question" placeholder="Question" style="width:300px" required>
       <input name="answer" placeholder="Answer" style="width:300px" required>
+      <input name="category" placeholder="Category" style="width:200px">
       <button type="submit">Add FAQ</button>
     </form>
+    <input id="faqSearch" placeholder="Search FAQs..." style="width:300px;margin-bottom:10px;">
     <ul id="faqList">
       {% for faq in faqs %}
-        <li><b>{{faq.question}}</b>: {{faq.answer}}</li>
+        <li>
+          <b>{{faq.question}}</b> ({{faq.category}}): {{faq.answer}}
+          <button onclick="editFAQ({{loop.index0}})">Edit</button>
+          <button onclick="deleteFAQ({{loop.index0}})">Delete</button>
+        </li>
       {% endfor %}
     </ul>
     <script>
       document.getElementById('faqForm').onsubmit = async function(e) {
         e.preventDefault();
         const form = e.target;
-        const res = await fetch('/admin/add', {
+        const res = await fetch('/admin/add?pw={{request.args.get('pw')}}', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ question: form.question.value, answer: form.answer.value })
+          body: JSON.stringify({ question: form.question.value, answer: form.answer.value, category: form.category.value })
         });
         if (res.ok) location.reload();
         else alert('Failed to add FAQ');
+      }
+      document.getElementById('faqSearch').oninput = function() {
+        const val = this.value.toLowerCase();
+        document.querySelectorAll('#faqList li').forEach(li => {
+          li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none';
+        });
+      };
+      function editFAQ(idx) {
+        const q = prompt('Edit question:', faqs[idx].question);
+        const a = prompt('Edit answer:', faqs[idx].answer);
+        const c = prompt('Edit category:', faqs[idx].category || '');
+        if (q && a) {
+          fetch('/admin/edit?pw={{request.args.get("pw")}}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({index: idx, question: q, answer: a, category: c})
+          }).then(r => location.reload());
+        }
+      }
+      function deleteFAQ(idx) {
+        if (confirm('Delete this FAQ?')) {
+          fetch('/admin/delete?pw={{request.args.get("pw")}}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({index: idx})
+          }).then(r => location.reload());
+        }
       }
     </script>
     """, faqs=FAQS_DATA)
@@ -555,15 +588,61 @@ def admin_add():
     data = request.get_json()
     question = data.get('question', '').strip()
     answer = data.get('answer', '').strip()
+    category = data.get('category', '').strip()
     if not question or not answer:
         return jsonify({'status': 'error', 'message': 'Question and answer required'}), 400
     if any(faq['question'].lower() == question.lower() for faq in FAQS_DATA):
         return jsonify({'status': 'error', 'message': 'Duplicate question'}), 400
-    FAQS_DATA.append({'question': question, 'answer': answer})
+    FAQS_DATA.append({'question': question, 'answer': answer, 'category': category})
     global question_embeddings_cache
     question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
     with open('faqs.json', 'w', encoding='utf-8') as f:
         json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
+    return jsonify({'status': 'ok'})
+
+@bp.route('/admin/edit', methods=['POST'])
+def admin_edit():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return jsonify({'status': 'unauthorized'}), 401
+    data = request.get_json()
+    idx = int(data['index'])
+    FAQS_DATA[idx]['question'] = data['question']
+    FAQS_DATA[idx]['answer'] = data['answer']
+    FAQS_DATA[idx]['category'] = data.get('category', '')
+    with open('faqs.json', 'w', encoding='utf-8') as f:
+        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
+    return jsonify({'status': 'ok'})
+
+@bp.route('/admin/delete', methods=['POST'])
+def admin_delete():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return jsonify({'status': 'unauthorized'}), 401
+    idx = int(request.get_json()['index'])
+    FAQS_DATA.pop(idx)
+    with open('faqs.json', 'w', encoding='utf-8') as f:
+        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
+    return jsonify({'status': 'ok'})
+
+@bp.route('/admin/export')
+def admin_export():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return "Unauthorized", 401
+    return current_app.response_class(
+        json.dumps(FAQS_DATA, ensure_ascii=False, indent=2),
+        mimetype='application/json',
+        headers={"Content-Disposition": "attachment;filename=faqs.json"}
+    )
+
+@bp.route('/feedback', methods=['POST'])
+def feedback():
+    data = request.get_json()
+    with open('feedback_log.txt', 'a', encoding='utf-8') as f:
+        f.write(json.dumps({
+            "question": data.get("question"),
+            "answer": data.get("answer"),
+            "feedback": data.get("feedback"),
+            "timestamp": datetime.datetime.now().isoformat()
+        }) + "\n")
     return jsonify({'status': 'ok'})
 
 def cosine_sim(a, b):

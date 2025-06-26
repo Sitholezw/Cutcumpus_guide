@@ -8,17 +8,17 @@
     "answer": "Harare, Chirundu rd, 2274, Chinhoyi, Zimbabwe."
   },
   {
-  "question": "How can I contact customer support?",
-  "answer": "You can reach us at icthelpdesk@cut.ac.zw or call us at +263 123 456 789."
+    "question": "How can I contact customer support?",
+    "answer": "You can reach us at icthelpdesk@cut.ac.zw or call us at +263 123 456 789."
   },
- {
-  "question": "What payment methods do you accept?",
-  "answer": "We accept credit cards, debit cards, and PayPal."
- },
- {
-  "question": "how much is the application fee?",
-  "answer": "The application fee for undergrade is $15 us or zig eqv."
- },
+  {
+    "question": "What payment methods do you accept?",
+    "answer": "We accept credit cards, debit cards, and PayPal."
+  },
+  {
+    "question": "how much is the application fee?",
+    "answer": "The application fee for undergrade is $15 us or zig eqv."
+  },
   {
     "question": "What is the application deadline?",
     "answer": "The application deadline for the next academic year is June 30."
@@ -74,7 +74,7 @@
   {
     "question": "How can I get involved in research opportunities?",
     "answer": "Students can get involved in research by contacting faculty members or applying for research assistant positions."
-  }, 
+  },
   {
     "question": "What support services are available for students?",
     "answer": "We offer academic advising, counseling, and career services to support our students."
@@ -121,12 +121,12 @@
   },
   {
     "question": "How do I enter my national id ?",
-      "answer": "The first 2 digits should be entered into the first box of the national id text area<br>Make sure that the letter of your id number goes into the third place of the id text area<br>Lastly make sure that the last 2 digits goes into the last box of the text area<br>The rest of the digits are now centred on the main body which is the second box"
-    },
-    {
-      "question": "How do I create a strong recommended password ?",
-      "answer": "Follow instructions from the password hint.<br>Your password should contain a number, upper case character, lower case character, special character.<br>If there is still a red color on the password requirement field type that means the password is lacking that specific red character."
-    },
+    "answer": "The first 2 digits should be entered into the first box of the national id text area<br>Make sure that the letter of your id number goes into the third place of the id text area<br>Lastly make sure that the last 2 digits goes into the last box of the text area<br>The rest of the digits are now centred on the main body which is the second box"
+  },
+  {
+    "question": "How do I create a strong recommended password ?",
+    "answer": "Follow instructions from the password hint.<br>Your password should contain a number, upper case character, lower case character, special character.<br>If there is still a red color on the password requirement field type that means the password is lacking that specific red character."
+  },
   {
     "question": "Failed to  login into the system?",
     "answer": "Makesure that your ID number and password are as the one submitted into the system and also note that if you are trying to login using a reg number it should have 2 letter one at the very beginning usually letter (C) and the very last character of your regnumber is also a letter i.e C201456788Y . A successful login will direct you to Tracking your Application or Entry into your portal."
@@ -239,14 +239,16 @@
     "question": "What should I do if I encounter technical issues with the student portal?",
     "answer": "If you face any technical issues, please contact the ICT Helpdesk at icthelpdesk@cut.ac.zw or call +263 784 840 335 for assistance."
   },
-   {
+  {
     "question": "How can i register for medical aid ?",
     "answer": "Kindly vist the Registry with a valid medical aid every semester so that it can be entered into the system and you wont be billed the $20 in your portal."
   },
   {
     "question": "i am failing to students get Accommodation?",
     "answer": "Kindly note that accommodation is given to First years (1.1) and part finals (4.2/5.2) ONLY would you not be include in these levels kindly shift to Offres accommodation ."
+  },
+  {
+    "question": "How do i check for my results",
+    "answer": "Kindly log into your Portal and click on results on the left side bar. Kindly note that results are available 7 days only after they are published!"
   }
 ]
-
-
