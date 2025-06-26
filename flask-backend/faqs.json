@@ -128,8 +128,8 @@
       "answer": "Follow instructions from the password hint.<br>Your password should contain a number, upper case character, lower case character, special character.<br>If there is still a red color on the password requirement field type that means the password is lacking that specific red character."
     },
   {
-    "question": "I cannot log in into the system?",
-    "answer": "Connect to the internet (via a wired connection). Open any web browser of your choice. Log on to the UIS platform accessible on uis.cut.ac.zw through any web browser or login to the staff portal and select marks capturing portal under quick academic links. A successful login will direct you to the UIS system."
+    "question": "Failed to  login into the system?",
+    "answer": "Makesure that your ID number and password are as the one submitted into the system and also note that if you are trying to login using a reg number it should have 2 letter one at the very beginning usually letter (C) and the very last character of your regnumber is also a letter i.e C201456788Y . A successful login will direct you to Tracking your Application or Entry into your portal."
   },
   {
     "question": "Students list not showing for the module that I want to capture marks. How do I make them appear on display?",
@@ -198,6 +198,46 @@
   {
     "question": "How to create a student portal?",
     "answer": "If you have applied online, the portal is created automatically. Use your registration number as username and the password you used to apply as password to login to the portal. If you applied manually, on the portal login page, click signup to create the portal."
+  },
+  {
+    "question": "How to reset my student portal password?",
+    "answer": "Go to the CUT website (www.cut.ac.zw), click on the student portal, and select 'Forgot Password'. Enter your registration number and follow the instructions sent to your email."
+  },
+  {
+    "question": "How do I access my course materials?",
+    "answer": "Once you are logged into your student portal, navigate to the E-learning section where you can find all your course materials."
+  },
+  {
+    "question": "What should I do if I forget my student portal password?",
+    "answer": "You can reset your password by clicking on the 'Forgot Password' link on the login page of the student portal."
+  },
+  {
+    "question": "How do I view my grades?",
+    "answer": "You can view your grades in the 'Academic Records' section of your student portal."
+  },
+  {
+    "question": "How do I update my personal information?",
+    "answer": "To update your personal information, log into your student portal and navigate to the 'Profile' section where you can edit your details."
+  },
+  {
+    "question": "How do I register for classes?",
+    "answer": "Class registration is done through the 'Registration' section of your student portal during the registration period."
+  },
+  {
+    "question": "How do I apply for financial aid?",
+    "answer": "Financial aid applications can be submitted through the 'Financial Aid' section of your student portal."
+  },
+  {
+    "question": "How do I submit assignments online?",
+    "answer": "Assignments can be submitted through the E-learning section of your student portal. Each course will have a designated area for assignment submissions."
+  },
+  {
+    "question": "How do I check my exam timetable?",
+    "answer": "You can check your exam timetable in the Exams section of your student portal once it has been released."
+  },
+  {
+    "question": "What should I do if I encounter technical issues with the student portal?",
+    "answer": "If you face any technical issues, please contact the ICT Helpdesk at icthelpdesk@cut.ac.zw or call +263 784 840 335 for assistance."
   }
 ]
 
