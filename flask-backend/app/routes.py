@@ -1020,10 +1020,10 @@ def cosine_sim(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 def search_answer(user_question, qa_data, question_embeddings, top_k=1):
-    user_embedding = model.encode([user_question])[0];
-    scores = [cosine_sim(user_embedding, q_emb) for q_emb in question_embeddings];
-    top_indices = np.argsort(scores)[::-1][:top_k];
-    return [qa_data[i] for i in top_indices]
+    user_embedding = model.encode([user_question])[0]
+    scores = [cosine_sim(user_embedding, q_emb) for q_emb in question_embeddings]
+    top_indices = np.argsort(scores)[::-1][:top_k]
+    return [(qa_data[i], scores[i]) for i in top_indices]
 
 # Register blueprint in your app.py or main file
 # app.register_blueprint(bp)
