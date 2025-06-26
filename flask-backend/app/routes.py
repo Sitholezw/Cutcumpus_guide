@@ -3,6 +3,8 @@ import numpy as np
 import json
 from sentence_transformers import SentenceTransformer
 import datetime
+import pdfplumber
+from werkzeug.utils import secure_filename
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
@@ -822,6 +824,42 @@ def feedback():
             "timestamp": datetime.datetime.now().isoformat()
         }) + "\n")
     return jsonify({'status': 'ok'})
+
+@bp.route('/admin/upload_pdf', methods=['POST'])
+def admin_upload_pdf():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return jsonify({'status': 'unauthorized'}), 401
+    if 'pdf' not in request.files:
+        return jsonify({'status': 'error', 'message': 'No file uploaded'}), 400
+    file = request.files['pdf']
+    if not file.filename.lower().endswith('.pdf'):
+        return jsonify({'status': 'error', 'message': 'Not a PDF file'}), 400
+
+    # Extract text from PDF
+    with pdfplumber.open(file) as pdf:
+        text = "\n".join(page.extract_text() or "" for page in pdf.pages)
+
+    # Simple split: Each line with "Q:" is a question, next line is answer
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    new_faqs = []
+    i = 0
+    while i < len(lines):
+        if lines[i].lower().startswith('q:'):
+            question = lines[i][2:].strip()
+            answer = ""
+            if i+1 < len(lines) and lines[i+1].lower().startswith('a:'):
+                answer = lines[i+1][2:].strip()
+                i += 1
+            new_faqs.append({'question': question, 'answer': answer, 'category': ''})
+        i += 1
+
+    # Add to FAQS_DATA and save
+    FAQS_DATA.extend(new_faqs)
+    global question_embeddings_cache
+    question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
+    with open('faqs.json', 'w', encoding='utf-8') as f:
+        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
+    return jsonify({'status': 'ok', 'added': len(new_faqs)})
 
 def cosine_sim(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
