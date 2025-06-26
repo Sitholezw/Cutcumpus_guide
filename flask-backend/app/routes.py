@@ -347,14 +347,6 @@ HTML_PAGE = """<!DOCTYPE html>
     const sendBtn = document.getElementById('sendBtn');
     sendBtn.disabled = true;
 
-    function saveHistory() {
-      localStorage.setItem('chatHistory', chatbox.innerHTML);
-    }
-    function loadHistory() {
-      const history = localStorage.getItem('chatHistory');
-      if (history) chatbox.innerHTML = history;
-    }
-
     function addBubble(text, sender) {
       const bubble = document.createElement('div');
       bubble.className = 'bubble ' + sender;
@@ -397,7 +389,6 @@ HTML_PAGE = """<!DOCTYPE html>
       }
       chatbox.appendChild(bubble);
       chatbox.scrollTop = chatbox.scrollHeight;
-      saveHistory();
     }
 
     function showTyping() {
@@ -465,7 +456,6 @@ HTML_PAGE = """<!DOCTYPE html>
     };
     // Load dark mode preference
     window.onload = () => {
-      loadHistory();
       const darkModePreference = localStorage.getItem('darkMode');
       if (darkModePreference === 'true') {
         darkMode = true;
