@@ -525,30 +525,69 @@ def admin_page():
 <!DOCTYPE html>
 <html>
 <head>
-  <title> CUT | FAQ Admin Panel</title>
+  <title>CUT | FAQ Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/images/favicon.png') }}">
   <style>
+    :root {
+      --bg: url('{{ url_for('static', filename='assets/images/background.jpg') }}') center/cover no-repeat fixed, linear-gradient(135deg, #e0e7ff 0%, #f4f7fa 100%);
+      --glass: rgba(255,255,255,0.55);
+      --text: #222;
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+    }
     body {
+      background: var(--bg);
+      color: var(--text);
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f4f7fa;
       margin: 0;
       padding: 0;
-      color: #222;
+      min-height: 100vh;
+      transition: background 0.3s;
     }
     .container {
       max-width: 700px;
       margin: 40px auto;
-      background: #fff;
+      background: var(--glass);
       border-radius: 14px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.10);
       padding: 32px 28px 24px 28px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     h2 {
       margin-top: 0;
       font-size: 2em;
       letter-spacing: 1px;
-      color: #2563eb;
+      color: var(--primary);
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    h2 img {
+      width: 36px;
+      height: 36px;
+      vertical-align: middle;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 1.3em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .theme-toggle:hover {
+      background: #e0e7ff;
     }
     form {
       display: flex;
@@ -567,12 +606,12 @@ def admin_page():
       transition: border 0.2s;
     }
     form input:focus, form select:focus {
-      border: 1.5px solid #2563eb;
+      border: 1.5px solid var(--primary);
       background: #fff;
       outline: none;
     }
     form button {
-      background: #2563eb;
+      background: var(--primary);
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -582,7 +621,7 @@ def admin_page():
       transition: background 0.2s;
     }
     form button:hover {
-      background: #1e40af;
+      background: var(--primary-dark);
     }
     #faqSearch {
       width: 100%;
@@ -595,7 +634,7 @@ def admin_page():
       transition: border 0.2s;
     }
     #faqSearch:focus {
-      border: 1.5px solid #2563eb;
+      border: 1.5px solid var(--primary);
       background: #fff;
       outline: none;
     }
@@ -605,7 +644,7 @@ def admin_page():
       margin: 0;
     }
     .faq-item {
-      background: #f1f5fb;
+      background: rgba(241,245,251,0.85);
       border-radius: 10px;
       margin-bottom: 12px;
       padding: 16px 14px;
@@ -614,6 +653,7 @@ def admin_page():
       gap: 6px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       position: relative;
+      transition: background 0.2s;
     }
     .faq-actions {
       margin-top: 6px;
@@ -622,7 +662,7 @@ def admin_page():
     }
     .faq-actions button {
       background: #fff;
-      color: #2563eb;
+      color: var(--primary);
       border: 1px solid #c7d2fe;
       border-radius: 6px;
       padding: 5px 14px;
@@ -631,7 +671,7 @@ def admin_page():
       transition: background 0.2s, color 0.2s;
     }
     .faq-actions button:hover {
-      background: #2563eb;
+      background: var(--primary);
       color: #fff;
     }
     .export-btn {
@@ -639,7 +679,7 @@ def admin_page():
       margin-top: -38px;
       margin-bottom: 18px;
       background: #e0e7ff;
-      color: #2563eb;
+      color: var(--primary);
       border: 1px solid #c7d2fe;
       border-radius: 8px;
       padding: 8px 16px;
@@ -648,7 +688,7 @@ def admin_page():
       transition: background 0.2s, color 0.2s;
     }
     .export-btn:hover {
-      background: #2563eb;
+      background: var(--primary);
       color: #fff;
     }
     @media (max-width: 700px) {
@@ -656,11 +696,72 @@ def admin_page():
       form { flex-direction: column; gap: 8px; }
       .export-btn { float: none; display: block; width: 100%; margin: 0 0 18px 0; }
     }
+    /* DARK MODE */
+    body.dark {
+      --bg: url('{{ url_for('static', filename='assets/images/background.jpg') }}') center/cover no-repeat fixed, linear-gradient(135deg, #23272a 0%, #181a1b 100%);
+      --glass: rgba(24,26,27,0.55);
+      --text: #f4f7fa;
+      --primary: #a5b4fc;
+      --primary-dark: #2563eb;
+    }
+    body.dark {
+      color: var(--text);
+    }
+    body.dark .container {
+      background: var(--glass);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    body.dark h2 {
+      color: var(--primary);
+    }
+    body.dark form input, body.dark form select, body.dark #faqSearch {
+      background: #23272a;
+      color: var(--text);
+      border: 1.5px solid #374151;
+    }
+    body.dark form input:focus, body.dark form select:focus, body.dark #faqSearch:focus {
+      background: #181a1b;
+      border: 1.5px solid var(--primary-dark);
+    }
+    body.dark form button, body.dark .faq-actions button {
+      background: var(--primary-dark);
+      color: #fff;
+    }
+    body.dark form button:hover, body.dark .faq-actions button:hover {
+      background: var(--primary);
+      color: #23272a;
+    }
+    body.dark .faq-item {
+      background: rgba(35,39,42,0.85);
+      color: var(--text);
+    }
+    body.dark .export-btn {
+      background: #23272a;
+      color: var(--primary);
+      border: 1px solid #374151;
+    }
+    body.dark .export-btn:hover {
+      background: var(--primary-dark);
+      color: #fff;
+    }
+    body.dark .theme-toggle {
+      background: #23272a;
+      color: var(--primary);
+    }
+    body.dark .theme-toggle:hover {
+      background: #1e293b;
+    }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
   <div class="container">
-    <h2>FAQ Admin Panel</h2>
+    <h2>
+      <img src="{{ url_for('static', filename='assets/images/favicon.png') }}" alt="icon">
+      FAQ Admin Panel
+    </h2>
     <a href="/admin/export?pw={{request.args.get('pw')}}" class="export-btn" download>⬇️ Download FAQs (JSON)</a>
     <form id="faqForm">
       <input name="question" placeholder="Question" required>
@@ -684,6 +785,35 @@ def admin_page():
     </ul>
   </div>
   <script>
+    // Theme toggle logic
+    const themeToggle = document.getElementById('themeToggle');
+    let darkMode = false;
+    themeToggle.onclick = () => {
+      darkMode = !darkMode;
+      if (darkMode) {
+        document.body.classList.add('dark');
+        themeToggle.innerHTML = '☀️';
+        localStorage.setItem('adminDarkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        themeToggle.innerHTML = '🌙';
+        localStorage.setItem('adminDarkMode', 'false');
+      }
+    };
+    window.onload = () => {
+      const darkModePreference = localStorage.getItem('adminDarkMode');
+      if (darkModePreference === 'true') {
+        darkMode = true;
+        document.body.classList.add('dark');
+        themeToggle.innerHTML = '☀️';
+      } else {
+        darkMode = false;
+        document.body.classList.remove('dark');
+        themeToggle.innerHTML = '🌙';
+      }
+    };
+
+    // FAQ logic
     const faqs = {{ faqs|tojson }};
     document.getElementById('faqForm').onsubmit = async function(e) {
       e.preventDefault();
