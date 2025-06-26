@@ -56,6 +56,10 @@ HTML_PAGE = """<!DOCTYPE html>
       letter-spacing: 1px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
+    #headman {
+      /* Default color, will be overridden in dark mode */
+      color: #222;
+    }
     #chatbox {
       width: 100%;
       max-width: 420px;
@@ -233,7 +237,7 @@ HTML_PAGE = """<!DOCTYPE html>
       }
     }
     body.dark {
-      --bg: linear-gradient(135deg, #23272a 0%, #181a1b 100%);
+      --bg: url('{{ url_for('static', filename='assets/images/background.jpg') }}') center/cover no-repeat fixed, linear-gradient(135deg, #23272a 0%, #181a1b 100%);
       --bubble-bot: #23272a;
       --bubble-user: #1e40af;
       --text: #f4f7fa;
@@ -274,6 +278,9 @@ HTML_PAGE = """<!DOCTYPE html>
     }
     body.dark #themeToggle:hover {
       background: #1e293b;
+    }
+    body.dark #headman {
+      color: #fff;
     }
 
     /* Responsive styles for mobile */
@@ -316,7 +323,7 @@ HTML_PAGE = """<!DOCTYPE html>
   </style>
 </head>
 <body>
-  <h1>CUT CHATBOT</h1>
+  <h1 id="headman">CUT CHATBOT</h1>
   <button id="themeToggle" title="Toggle theme">🌙</button>
   <div id="chatbox"></div>
   <div id="inputArea">
