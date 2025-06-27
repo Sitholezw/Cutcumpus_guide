@@ -219,10 +219,6 @@
     "answer": "You can reset your password by clicking on the 'Forgot Password' link on the login page of the student portal."
   },
   {
-    "question": "How do I view my grades?",
-    "answer": "You can view your grades in the 'Academic Records' section of your student portal."
-  },
-  {
     "question": "How do I update my personal information?",
     "answer": "To update your personal information, log into your student portal and navigate to the 'Profile' section where you can edit your details."
   },
@@ -271,6 +267,16 @@
   {
     "question": "Can I apply to CUT while completing A-level?",
     "answer": "The pre-application indicates that the prospective candidate is enthusiastic about our institution, which is greatly appreciated. All the same, admission into the desired programme is determined by the submission of student results after the successful completion of the qualifying studies being undertaken. Upon application, the system requests you to submit your qualification which, if not sent in full, will have you being rejected. As such, for the avoidance of regrets and the discomforts the cause, pre-application is generally not encouraged.",
+    "category": ""
+  },
+  {
+    "question": "Where would I find undergraduate programmes and criteria for admission to CUT?",
+    "answer": "On the Home page, under Browse Programs, click on undergraduate to go to the next page, where you will view a drop down menu of all the undergraduate programmes, then select a programme of your choice. You can as well click on any school of your choice under Schools for further checks on home. fter clicking on Schools, the window appears. Click on DEPARTMENTS to view the programmes under a particular department. fter clicking on DEPARTMENTS, click on any department of your choice, programmes for that department will be listed. Click on the programme of your choice and you will be taken to the next page that will inform you of the entry requirements for that particular programme. Choose your mode of entry to view specific requirements, depending on your qualifications and preferred discipline.",
+    "category": ""
+  },
+  {
+    "question": "; How do I apply at CUT?",
+    "answer": "On the Home page, click either of the two highlighted blue buttons to go to the next page shown below. On the Home page, click either of the either apply now or click here buttons. On the far right hand corner of the top menu bar, click on the Create Account Fill in the form as shown above, following the prompts and instructions. Note that all fields marked with asterisks (*) should not be left blank. The application check bar indicates the progress of your application. On completion of your application (that is on the tenth notch); you are required to submit your application.",
     "category": ""
   }
 ]
