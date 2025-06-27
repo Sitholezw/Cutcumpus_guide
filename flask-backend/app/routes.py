@@ -522,7 +522,7 @@ def ask():
     # Log the question
     with open('question_log.txt', 'a', encoding='utf-8') as logf:
         logf.write(f"{datetime.datetime.now().isoformat()} - {question}\n")
-    threshold = 0.70  # You can adjust this value
+    threshold = 0.50  # You can adjust this value
     results = search_answer(question, FAQS_DATA, question_embeddings_cache, top_k=1)
     if results and results[0][1] >= threshold:
         return jsonify({'answer': results[0][0]['answer']})
@@ -867,7 +867,7 @@ def admin_page():
     const faqs = {{ faqs|tojson }};
 
     // Edit FAQ logic
-    function editFAQ(index) {
+        function editFAQ(index) {
       const faq = faqs[index];
       const form = document.getElementById('faqForm');
       form.question.value = faq.question;
@@ -875,6 +875,10 @@ def admin_page():
       form.category.value = faq.category || '';
       form.dataset.editing = index;
       form.querySelector('button[type="submit"]').textContent = "Update FAQ";
+      // Scroll to the Add/Edit FAQ form
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Optionally, focus the first input
+      form.question.focus();
     }
 
     // Add/Edit form handler
