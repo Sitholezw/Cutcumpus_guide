@@ -620,9 +620,7 @@ def admin_page():
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
       text-decoration: none;
-      position: absolute;
-      top: 32px;
-      right: 32px;
+      margin-bottom: 18px;
     }
     .download-btn:hover {
       background: #2563eb;
