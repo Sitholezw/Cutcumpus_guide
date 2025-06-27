@@ -801,7 +801,6 @@ def admin_page():
       <img src="{{ url_for('static', filename='assets/images/favicon.png') }}" alt="icon">
       FAQ Admin Panel
     </h2>
-    <!-- Move the download button here, below the h2 and above the form -->
     <div style="margin: 0 auto 18px auto; display: flex; justify-content: center;">
       <a href="/admin/export?pw={{request.args.get('pw')}}" class="download-btn" download>
         <span>⬇️ Download FAQs (JSON)</span>
@@ -812,23 +811,24 @@ def admin_page():
       <input type="file" name="pdf" accept="application/pdf" required>
       <button type="submit" class="pdf-btn">Upload PDF</button>
     </form>
-    <div id="pdfPreviewResult"></div>
     <form id="faqForm">
       <input name="question" placeholder="Question" required>
       <input name="answer" placeholder="Answer" required>
-      <input name="category" placeholder="Category">
+      <input name="category" placeholder="Category (optional)">
       <button type="submit">Add FAQ</button>
     </form>
     <input id="faqSearch" placeholder="Search FAQs...">
     <ul id="faqList" class="faq-list">
       {% for faq in faqs %}
         <li class="faq-item">
-          <div><b>Q:</b> {{faq.question}}</div>
-          <div><b>A:</b> {{faq.answer}}</div>
-          <div><b>Category:</b> {{faq.category}}</div>
+          <div><b>Q:</b> {{ faq.question }}</div>
+          <div><b>A:</b> {{ faq.answer }}</div>
+          {% if faq.category %}
+            <div><b>Category:</b> {{ faq.category }}</div>
+          {% endif %}
           <div class="faq-actions">
-            <button onclick="editFAQ({{loop.index0}})">Edit</button>
-            <button onclick="deleteFAQ({{loop.index0}})">Delete</button>
+            <button type="button" onclick="editFAQ({{ loop.index0 }})">Edit</button>
+            <button type="button" onclick="deleteFAQ({{ loop.index0 }})">Delete</button>
           </div>
         </li>
       {% endfor %}
@@ -865,34 +865,66 @@ def admin_page():
 
     // FAQ logic
     const faqs = {{ faqs|tojson }};
+
+    // Edit FAQ logic
+    function editFAQ(index) {
+      const faq = faqs[index];
+      const form = document.getElementById('faqForm');
+      form.question.value = faq.question;
+      form.answer.value = faq.answer;
+      form.category.value = faq.category || '';
+      form.dataset.editing = index;
+      form.querySelector('button[type="submit"]').textContent = "Update FAQ";
+    }
+
+    // Add/Edit form handler
     document.getElementById('faqForm').onsubmit = async function(e) {
       e.preventDefault();
       const form = e.target;
-      const res = await fetch('/admin/add?pw={{request.args.get('pw')}}', {
+      const editing = form.dataset.editing;
+      const url = editing !== undefined && editing !== ""
+        ? `/admin/edit?pw={{ request.args.get('pw') }}`
+        : `/admin/add?pw={{ request.args.get('pw') }}`;
+      const payload = {
+        question: form.question.value,
+        answer: form.answer.value,
+        category: form.category.value || ''
+      };
+      if (editing !== undefined && editing !== "") payload.index = parseInt(editing);
+
+      const res = await fetch(url, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          question: form.question.value,
-          answer: form.answer.value,
-          category: form.category.value
-        })
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        form.reset();
+        form.dataset.editing = "";
+        form.querySelector('button[type="submit"]').textContent = "Add FAQ";
+        document.getElementById('faqSearch').value = '';
+        location.reload();
+      } else {
+        alert('Failed to ' + (editing !== undefined && editing !== "" ? 'edit' : 'add') + ' FAQ');
+      }
+    };
+
+    // Delete FAQ
+    async function deleteFAQ(index) {
+      if (!confirm("Are you sure you want to delete this FAQ?")) return;
+      const res = await fetch(`/admin/delete?pw={{ request.args.get('pw') }}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ index })
       });
       if (res.ok) {
-        form.reset(); // Clear FAQ form fields
-        document.getElementById('faqSearch').value = ''; // Clear search field
         location.reload();
+      } else {
+        alert('Failed to delete FAQ');
       }
-      else alert('Failed to add FAQ');
-    };
+    }
 
-    document.getElementById('faqSearch').oninput = function() {
-      const val = this.value.toLowerCase();
-      document.querySelectorAll('#faqList .faq-item').forEach(li => {
-        li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none';
-      });
-      if (!val) this.value = ''; // Clear search if empty
-    };
-
+    // PDF upload handler (clear file input after upload)
     document.getElementById('pdfForm').onsubmit = async function(e) {
       e.preventDefault();
       const form = e.target;
@@ -911,59 +943,14 @@ def admin_page():
       }
     };
 
-    // Add/Edit FAQ logic
-    function editFAQ(index) {
-      const faq = faqs[index];
-      const form = document.getElementById('faqForm');
-      form.question.value = faq.question;
-      form.answer.value = faq.answer;
-      form.category.value = faq.category;
-      form.dataset.editing = index;
-      form.querySelector('button[type="submit"]').textContent = "Update FAQ";
-    }
-
-    document.getElementById('faqForm').onsubmit = async function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const editing = form.dataset.editing;
-      const url = editing !== undefined
-        ? `/admin/edit?pw={{request.args.get('pw')}}`
-        : `/admin/add?pw={{request.args.get('pw')}}`;
-      const payload = {
-        question: form.question.value,
-        answer: form.answer.value,
-        category: form.category.value
-      };
-      if (editing !== undefined) payload.index = editing;
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload)
+    // FAQ search (optional: clear on add/edit)
+    document.getElementById('faqSearch').addEventListener('input', function() {
+      const val = this.value.toLowerCase();
+      document.querySelectorAll('#faqList .faq-item').forEach(li => {
+        li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none';
       });
-      if (res.ok) {
-        form.reset();
-        form.dataset.editing = "";
-        form.querySelector('button[type="submit"]').textContent = "Add FAQ";
-        document.getElementById('faqSearch').value = '';
-        location.reload();
-      } else {
-        alert('Failed to ' + (editing !== undefined ? 'edit' : 'add') + ' FAQ');
-      }
-    };
+    });
 
-    async function deleteFAQ(index) {
-      if (!confirm("Are you sure you want to delete this FAQ?")) return;
-      const res = await fetch(`/admin/delete?pw={{request.args.get('pw')}}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({index})
-      });
-      if (res.ok) {
-        location.reload();
-      } else {
-        alert('Failed to delete FAQ');
-      }
-    }
   </script>
 </body>
 </html>
@@ -1106,34 +1093,29 @@ def admin_upload_pdf():
             question = q_match.group(2).strip();
             answer_lines = [];
             i += 1;
-            // Collect answer lines until next question or end
-            while (i < lines.length) {
-                // Stop if next line is a question
-                if (re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*', lines[i], re.I)) {
-                    break;
-                }
-                // If line starts with A: or Answer:, remove that
-                a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i], re.I);
-                if (a_match) {
-                    answer_lines.append(a_match.group(2).strip());
-                } else {
-                    answer_lines.append(lines[i]);
-                }
-                i += 1;
-            }
-            answer = " ".join(answer_lines).strip();
-            if (question && answer) {
-                new_faqs.append({'question': question, 'answer': answer, 'category': ''});
-            }
-        } else {
-            i += 1;
-        }
+            # Collect answer lines until next question or end
+            while i < len(lines):
+                # Stop if next line is a question
+                if re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*', lines[i], re.I):
+                    break
+                # If line starts with A: or Answer:, remove that
+                a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i], re.I)
+                if a_match:
+                    answer_lines.append(a_match.group(2).strip())
+                else:
+                    answer_lines.append(lines[i])
+                i += 1
+            answer = " ".join(answer_lines).strip()
+            if question and answer:
+                new_faqs.append({'question': question, 'answer': answer, 'category': ''})
+        else:
+            i += 1
 
     # Add to FAQS_DATA and save
-    FAQS_DATA.extend(new_faqs);
-    global question_embeddings_cache;
-    question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA]);
+    FAQS_DATA.extend(new_faqs)
+    global question_embeddings_cache
+    question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
     with open('faqs.json', 'w', encoding='utf-8') as f:
-        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2);
-    return jsonify({'status': 'ok', 'added': len(new_faqs)});
+        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
+    return jsonify({'status': 'ok', 'added': len(new_faqs)})
 
