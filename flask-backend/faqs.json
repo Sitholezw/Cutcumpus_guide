@@ -278,5 +278,80 @@
     "question": "; How do I apply at CUT?",
     "answer": "On the Home page, click either of the two highlighted blue buttons to go to the next page shown below. On the Home page, click either of the either apply now or click here buttons. On the far right hand corner of the top menu bar, click on the Create Account Fill in the form as shown above, following the prompts and instructions. Note that all fields marked with asterisks (*) should not be left blank. The application check bar indicates the progress of your application. On completion of your application (that is on the tenth notch); you are required to submit your application.",
     "category": ""
+  },
+  {
+    "question": "Where can I get help in completing my application form?",
+    "answer": "The admissions department is there to help all our students with issues pertaining to applications for entry into the university’s learning programmes. They can be contacted on (+263) 067 22203-5",
+    "category": ""
+  },
+  {
+    "question": "How many programmes can I apply for ?",
+    "answer": "A student is obliged to apply for one programme of his/her choice which runs for either four or five years, depending on respective programme duration.",
+    "category": ""
+  },
+  {
+    "question": "Where can I find more information about what I can study at CUT?",
+    "answer": "On the home page, click on admissions and view all programmes offered under each school",
+    "category": ""
+  },
+  {
+    "question": "I once had completed my application, can I still make changes to my programme",
+    "answer": "selection? For as long as your qualifications meet the specified entry requirements for any desired programme, you are allowed to change to a preferred alternative choice.",
+    "category": ""
+  },
+  {
+    "question": "How do I know my application is complete?",
+    "answer": "During an online application, each stage that you complete gets marked and upon completion of all stages, you are prompted to submit your application.",
+    "category": ""
+  },
+  {
+    "question": "I have submitted my application, but my application status has not changed. Why is that",
+    "answer": "so? You might be in the waiting period of your application, pending approval of your programme of choice. Otherwise, you can get in touch with the admissions office to enquire on progress.",
+    "category": ""
+  },
+  {
+    "question": "How do I pay application fee?",
+    "answer": "The application fee is payable to the bank by whatever payment mode agreeable with the bank, as long as it suffices the amount required by CUT, and as long as clearly referenced nd traceable proof of payment is availed. You can pay using the following account numbers: ZB Bank A/c number 4565386395-200 For ZWL$ and 4565386395-410 For US$ (Chinhoyi branch). CBZ Bank A/c number 098214660210054 For ZWL$ and 09821460210084 For US$ (Chinhoyi branch).",
+    "category": ""
+  },
+  {
+    "question": "How do I know my application was successful?",
+    "answer": "The pending yellow button changes to green colour with status changed to approved",
+    "category": ""
+  },
+  {
+    "question": "I am an applicant for admission in 2025, but I have decided to take a gap year in 2025.",
+    "answer": "What do I do? In this case you should inform the registry about your waiver, for as long as you have registered and been given a student number. You inform them in writing for reference purposes.",
+    "category": ""
+  },
+  {
+    "question": "Where can I find out about the cost of studying at CUT?",
+    "answer": "We encourage students to phone the bursary for fee structures or send an email to studentsaccounts@cut.ac.zw.",
+    "category": ""
+  },
+  {
+    "question": "The Status reads ACCEPTED, my registration number does not appear, and if I try to",
+    "answer": "You get a message reading Applicant not found. You might be using a password different from the one you used during application. • The problem is caused by having done two applications, with the other left incomplete, hence confusing the system. • The applicant might have wrongly captured his/her identity numbers, such that when tracking the application there will be a mismatch, hence the problem. • Check with the registry if your details were captured correctly. If your date of birth or identity number (ID) were incorrectly captured, the system will not locate your pplication due to data mismatch.",
+    "category": ""
+  },
+  {
+    "question": "What is the conditional offer and how long is it valid for?",
+    "answer": "Conditional offer implies that the university will have offered you a place such that you can enrol and pay your fees within the stipulated period, failure of which the offer will lapse. Precisely, the offer is valid until the day lectures start.",
+    "category": ""
+  },
+  {
+    "question": "When will I receive a final decision from CUT?",
+    "answer": "If your qualifications meet the requirements of your desired programme, the maximum period within which you should get a response is less than 10mins.",
+    "category": ""
+  },
+  {
+    "question": "How do I get Housing offer with a CUT Acceptance offer?",
+    "answer": "A CUT acceptance letter signifies that you have been offered a place to study nd ordinarily, accommodation preference is given to all 1.1 students.",
+    "category": ""
+  },
+  {
+    "question": "; For how long is the offer valid ?",
+    "answer": "The offer is valid for two consecutive semesters.",
+    "category": ""
   }
 ]
