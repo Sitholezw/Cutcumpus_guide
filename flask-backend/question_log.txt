@@ -44,3 +44,12 @@
 2025-06-26T21:00:19.838494 - where are you located
 2025-06-26T21:04:58.923314 - what are the entry requirements
 2025-06-26T21:05:39.466886 - what are the entry requirements at cut
+2025-06-26T21:20:38.317262 - my wifi is not connecting
+2025-06-26T21:20:50.982990 - How do I accept my offer?
+2025-06-26T21:27:17.351723 - how much is the application fee for undergrad
+2025-06-26T21:27:48.648896 - how much is the application fee for postgrad
+2025-06-26T21:28:46.329424 - how can i register for accommodation
+2025-06-26T21:29:16.876651 - where can i have food ?
+2025-06-26T21:29:36.632108 - do you offer accommodation?
+2025-06-26T21:30:26.799511 - can anyone just have accommodation?
+2025-06-27T09:14:01.371227 - what are entry types available at cut

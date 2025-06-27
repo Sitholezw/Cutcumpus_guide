@@ -22,6 +22,15 @@ with open('faqs.json', encoding='utf-8') as f:
 # Precompute embeddings
 question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
 
+def search_answer(question, faqs_data, embeddings_cache, top_k=1):
+    question_embedding = model.encode([question])
+    similarities = np.dot(embeddings_cache, question_embedding[0])
+    top_indices = np.argsort(similarities)[::-1][:top_k]
+    results = []
+    for idx in top_indices:
+        results.append((faqs_data[idx], similarities[idx]))
+    return results
+
 @bp.route('/model_status')
 def model_status():
     return jsonify({'ready': model_ready[0]})
@@ -802,6 +811,12 @@ def admin_page():
       <input type="file" name="pdf" accept="application/pdf" required>
       <button type="submit" class="pdf-btn">Upload PDF</button>
     </form>
+    <form id="pdfPreviewForm" enctype="multipart/form-data" style="margin-bottom:10px;">
+      <label style="font-weight:600;">Preview FAQs from PDF:</label>
+      <input type="file" name="pdf" accept="application/pdf" required>
+      <button type="submit" class="pdf-btn" type="button">Preview PDF</button>
+    </form>
+    <div id="pdfPreviewResult"></div>
     <form id="faqForm">
       <input name="question" placeholder="Question" required>
       <input name="answer" placeholder="Answer" required>
@@ -912,10 +927,77 @@ def admin_page():
         alert('Error: ' + (data.message || 'Could not import PDF'));
       }
     };
+    document.getElementById('pdfPreviewForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const res = await fetch('/admin/preview_pdf?pw={{request.args.get("pw")}}', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      const previewDiv = document.getElementById('pdfPreviewResult');
+      if (data.status === 'ok') {
+        previewDiv.innerHTML = `<b>Found ${data.count} FAQs:</b><ul>` +
+          data.faqs.map(f => `<li><b>Q:</b> ${f.question}<br><b>A:</b> ${f.answer}</li>`).join('') +
+          '</ul>';
+      } else {
+        previewDiv.innerHTML = `<span style="color:red;">${data.message || 'Could not preview PDF'}</span>`;
+      }
+    };
   </script>
 </body>
 </html>
     """, faqs=FAQS_DATA)
+
+@bp.route('/admin/feedback')
+def admin_feedback():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return "Unauthorized", 401
+    feedbacks = []
+    try:
+        with open('feedback_log.txt', encoding='utf-8') as f:
+            for line in f:
+                feedbacks.append(json.loads(line))
+    except FileNotFoundError:
+        pass
+    return render_template_string("""
+    <html>
+    <head>
+      <title>Feedback Review</title>
+      <style>
+        body { font-family: Arial, sans-serif; background: #f8fafc; color: #222; }
+        .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px #0001; padding: 32px; }
+        h2 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+        th, td { border: 1px solid #e5e7eb; padding: 8px 12px; }
+        th { background: #e0e7ff; }
+        tr:nth-child(even) { background: #f1f5fb; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>Feedback Log</h2>
+        <table>
+          <tr>
+            <th>Timestamp</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Feedback</th>
+          </tr>
+          {% for fb in feedbacks %}
+          <tr>
+            <td>{{fb.timestamp}}</td>
+            <td>{{fb.question}}</td>
+            <td>{{fb.answer}}</td>
+            <td>{{fb.feedback}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </body>
+    </html>
+    """, feedbacks=feedbacks)
 
 @bp.route('/admin/add', methods=['POST'])
 def admin_add():
@@ -1021,14 +1103,31 @@ def admin_upload_pdf():
         json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
     return jsonify({'status': 'ok', 'added': len(new_faqs)})
 
-def cosine_sim(a, b):
-    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+@bp.route('/admin/preview_pdf', methods=['POST'])
+def admin_preview_pdf():
+    if request.args.get("pw") != ADMIN_PASSWORD:
+        return jsonify({'status': 'unauthorized'}), 401
+    if 'pdf' not in request.files:
+        return jsonify({'status': 'error', 'message': 'No file uploaded'}), 400
+    file = request.files['pdf']
+    if not file.filename.lower().endswith('.pdf'):
+        return jsonify({'status': 'error', 'message': 'Not a PDF file'}), 400
 
-def search_answer(user_question, qa_data, question_embeddings, top_k=1):
-    user_embedding = model.encode([user_question])[0]
-    scores = [cosine_sim(user_embedding, q_emb) for q_emb in question_embeddings]
-    top_indices = np.argsort(scores)[::-1][:top_k]
-    return [(qa_data[i], scores[i]) for i in top_indices]
+    with pdfplumber.open(file) as pdf:
+        text = "\n".join(page.extract_text() or "" for page in pdf.pages)
 
-# Register blueprint in your app.py or main file
-# app.register_blueprint(bp)
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    new_faqs = []
+    i = 0
+    while i < len(lines):
+        q_match = re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*(.*)', lines[i], re.I)
+        if q_match:
+            question = q_match.group(2).strip()
+            answer = ""
+            if i+1 < len(lines):
+                a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i+1], re.I)
+                if a_match:
+                    answer = a_match.group(2).strip()
+                    i += 1
+            if question and answer:
+                new_faqs.append({'question': question, 'answer': answer, 'category': ''})
