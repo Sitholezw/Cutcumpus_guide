@@ -335,6 +335,19 @@ HTML_PAGE = """<!DOCTYPE html>
         margin-right: 6px;
       }
     }
+    body.dark form textarea,
+body.dark form input,
+body.dark form select {
+  background: #23272a;
+  color: var(--text);
+  border: 1.5px solid #374151;
+}
+body.dark form textarea:focus,
+body.dark form input:focus,
+body.dark form select:focus {
+  background: #181a1b;
+  border: 1.5px solid var(--primary-dark);
+}
   </style>
 </head>
 <body>
@@ -1101,7 +1114,7 @@ def admin_upload_pdf():
             while i < len(lines):
                 # Stop if next line is a question
                 if re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*', lines[i], re.I):
-                    break
+                    break;
                 # If line starts with A: or Answer:, remove that
                 a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i], re.I)
                 if a_match:
