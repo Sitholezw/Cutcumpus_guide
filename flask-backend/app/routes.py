@@ -877,36 +877,22 @@ def admin_page():
           category: form.category.value
         })
       });
-      if (res.ok) location.reload();
+      if (res.ok) {
+        form.reset(); // Clear FAQ form fields
+        document.getElementById('faqSearch').value = ''; // Clear search field
+        location.reload();
+      }
       else alert('Failed to add FAQ');
     };
+
     document.getElementById('faqSearch').oninput = function() {
       const val = this.value.toLowerCase();
       document.querySelectorAll('#faqList .faq-item').forEach(li => {
         li.style.display = li.textContent.toLowerCase().includes(val) ? '' : 'none';
       });
+      if (!val) this.value = ''; // Clear search if empty
     };
-    window.editFAQ = function(idx) {
-      const q = prompt('Edit question:', faqs[idx].question);
-      const a = prompt('Edit answer:', faqs[idx].answer);
-      const c = prompt('Edit category:', faqs[idx].category || '');
-      if (q && a) {
-        fetch('/admin/edit?pw={{request.args.get("pw")}}', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({index: idx, question: q, answer: a, category: c})
-        }).then(r => location.reload());
-      }
-    };
-    window.deleteFAQ = function(idx) {
-      if (confirm('Delete this FAQ?')) {
-        fetch('/admin/delete?pw={{request.args.get("pw")}}', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({index: idx})
-        }).then(r => location.reload());
-      }
-    };
+
     document.getElementById('pdfForm').onsubmit = async function(e) {
       e.preventDefault();
       const form = e.target;
@@ -916,6 +902,7 @@ def admin_page():
         body: formData
       });
       const data = await res.json();
+      form.reset(); // Clear PDF file input after upload
       if (data.status === 'ok') {
         alert('Imported ' + data.added + ' FAQs from PDF!');
         location.reload();
