@@ -910,6 +910,60 @@ def admin_page():
         alert('Error: ' + (data.message || 'Could not import PDF'));
       }
     };
+
+    // Add/Edit FAQ logic
+    function editFAQ(index) {
+      const faq = faqs[index];
+      const form = document.getElementById('faqForm');
+      form.question.value = faq.question;
+      form.answer.value = faq.answer;
+      form.category.value = faq.category;
+      form.dataset.editing = index;
+      form.querySelector('button[type="submit"]').textContent = "Update FAQ";
+    }
+
+    document.getElementById('faqForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const editing = form.dataset.editing;
+      const url = editing !== undefined
+        ? `/admin/edit?pw={{request.args.get('pw')}}`
+        : `/admin/add?pw={{request.args.get('pw')}}`;
+      const payload = {
+        question: form.question.value,
+        answer: form.answer.value,
+        category: form.category.value
+      };
+      if (editing !== undefined) payload.index = editing;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        form.reset();
+        form.dataset.editing = "";
+        form.querySelector('button[type="submit"]').textContent = "Add FAQ";
+        document.getElementById('faqSearch').value = '';
+        location.reload();
+      } else {
+        alert('Failed to ' + (editing !== undefined ? 'edit' : 'add') + ' FAQ');
+      }
+    };
+
+    async function deleteFAQ(index) {
+      if (!confirm("Are you sure you want to delete this FAQ?")) return;
+      const res = await fetch(`/admin/delete?pw={{request.args.get('pw')}}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({index})
+      });
+      if (res.ok) {
+        location.reload();
+      } else {
+        alert('Failed to delete FAQ');
+      }
+    }
   </script>
 </body>
 </html>
@@ -1042,29 +1096,44 @@ def admin_upload_pdf():
     with pdfplumber.open(file) as pdf:
         text = "\n".join(page.extract_text() or "" for page in pdf.pages)
 
-    # Simple split: Each line with "Q:" is a question, next line is answer
+    # Improved extraction: collect answer lines until next question or end
     lines = [line.strip() for line in text.split('\n') if line.strip()]
     new_faqs = []
     i = 0
     while i < len(lines):
-      q_match = re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*(.*)', lines[i], re.I);
-      if q_match:
-        question = q_match.group(2).strip();
-        answer = "";
-        if i+1 < len(lines):
-          a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i+1], re.I);
-          if a_match:
-            answer = a_match.group(2).strip();
+        q_match = re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*(.*)', lines[i], re.I)
+        if q_match:
+            question = q_match.group(2).strip();
+            answer_lines = [];
             i += 1;
-        if question and answer:
-          new_faqs.append({'question': question, 'answer': answer, 'category': ''});
-      i += 1;
+            // Collect answer lines until next question or end
+            while (i < lines.length) {
+                // Stop if next line is a question
+                if (re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*', lines[i], re.I)) {
+                    break;
+                }
+                // If line starts with A: or Answer:, remove that
+                a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i], re.I);
+                if (a_match) {
+                    answer_lines.append(a_match.group(2).strip());
+                } else {
+                    answer_lines.append(lines[i]);
+                }
+                i += 1;
+            }
+            answer = " ".join(answer_lines).strip();
+            if (question && answer) {
+                new_faqs.append({'question': question, 'answer': answer, 'category': ''});
+            }
+        } else {
+            i += 1;
+        }
 
     # Add to FAQS_DATA and save
-    FAQS_DATA.extend(new_faqs)
-    global question_embeddings_cache
-    question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
+    FAQS_DATA.extend(new_faqs);
+    global question_embeddings_cache;
+    question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA]);
     with open('faqs.json', 'w', encoding='utf-8') as f:
-        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
-    return jsonify({'status': 'ok', 'added': len(new_faqs)})
+        json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2);
+    return jsonify({'status': 'ok', 'added': len(new_faqs)});
 
