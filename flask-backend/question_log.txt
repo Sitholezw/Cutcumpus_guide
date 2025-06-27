@@ -53,3 +53,8 @@
 2025-06-26T21:29:36.632108 - do you offer accommodation?
 2025-06-26T21:30:26.799511 - can anyone just have accommodation?
 2025-06-27T09:14:01.371227 - what are entry types available at cut
+2025-06-27T09:22:12.727411 - How do I accept my offer?
+2025-06-27T09:22:46.271103 - what entry types are available at cut
+2025-06-27T09:29:58.754139 - can i apply after vompleting A-level
+2025-06-27T09:30:39.319482 - can i apply after completing A-level?
+2025-06-27T09:30:50.800931 - Can I apply to CUT while completing A-level?

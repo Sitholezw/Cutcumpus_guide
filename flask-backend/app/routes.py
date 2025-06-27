@@ -803,18 +803,16 @@ def admin_page():
       <img src="{{ url_for('static', filename='assets/images/favicon.png') }}" alt="icon">
       FAQ Admin Panel
     </h2>
-    <a href="/admin/export?pw={{request.args.get('pw')}}" class="download-btn" download>
-      <span>⬇️ Download FAQs (JSON)</span>
-    </a>
+    <!-- Move the download button here, below the h2 and above the form -->
+    <div style="margin: 0 auto 18px auto; display: flex; justify-content: center;">
+      <a href="/admin/export?pw={{request.args.get('pw')}}" class="download-btn" download>
+        <span>⬇️ Download FAQs (JSON)</span>
+      </a>
+    </div>
     <form id="pdfForm" enctype="multipart/form-data" style="margin-bottom:18px;">
       <label style="font-weight:600;">Import FAQs from PDF:</label>
       <input type="file" name="pdf" accept="application/pdf" required>
       <button type="submit" class="pdf-btn">Upload PDF</button>
-    </form>
-    <form id="pdfPreviewForm" enctype="multipart/form-data" style="margin-bottom:10px;">
-      <label style="font-weight:600;">Preview FAQs from PDF:</label>
-      <input type="file" name="pdf" accept="application/pdf" required>
-      <button type="submit" class="pdf-btn" type="button">Preview PDF</button>
     </form>
     <div id="pdfPreviewResult"></div>
     <form id="faqForm">
@@ -925,24 +923,6 @@ def admin_page():
         location.reload();
       } else {
         alert('Error: ' + (data.message || 'Could not import PDF'));
-      }
-    };
-    document.getElementById('pdfPreviewForm').onsubmit = async function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
-      const res = await fetch('/admin/preview_pdf?pw={{request.args.get("pw")}}', {
-        method: 'POST',
-        body: formData
-      });
-      const data = await res.json();
-      const previewDiv = document.getElementById('pdfPreviewResult');
-      if (data.status === 'ok') {
-        previewDiv.innerHTML = `<b>Found ${data.count} FAQs:</b><ul>` +
-          data.faqs.map(f => `<li><b>Q:</b> ${f.question}<br><b>A:</b> ${f.answer}</li>`).join('') +
-          '</ul>';
-      } else {
-        previewDiv.innerHTML = `<span style="color:red;">${data.message || 'Could not preview PDF'}</span>`;
       }
     };
   </script>
@@ -1103,31 +1083,3 @@ def admin_upload_pdf():
         json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
     return jsonify({'status': 'ok', 'added': len(new_faqs)})
 
-@bp.route('/admin/preview_pdf', methods=['POST'])
-def admin_preview_pdf():
-    if request.args.get("pw") != ADMIN_PASSWORD:
-        return jsonify({'status': 'unauthorized'}), 401
-    if 'pdf' not in request.files:
-        return jsonify({'status': 'error', 'message': 'No file uploaded'}), 400
-    file = request.files['pdf']
-    if not file.filename.lower().endswith('.pdf'):
-        return jsonify({'status': 'error', 'message': 'Not a PDF file'}), 400
-
-    with pdfplumber.open(file) as pdf:
-        text = "\n".join(page.extract_text() or "" for page in pdf.pages)
-
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    new_faqs = []
-    i = 0
-    while i < len(lines):
-        q_match = re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*(.*)', lines[i], re.I)
-        if q_match:
-            question = q_match.group(2).strip()
-            answer = ""
-            if i+1 < len(lines):
-                a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i+1], re.I)
-                if a_match:
-                    answer = a_match.group(2).strip()
-                    i += 1
-            if question and answer:
-                new_faqs.append({'question': question, 'answer': answer, 'category': ''})
