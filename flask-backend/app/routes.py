@@ -1129,15 +1129,15 @@ def admin_upload_pdf():
             i += 1;
             # Collect answer lines until next question or end
             while i < len(lines):
-                // Stop if next line is a question
+                # Stop if next line is a question
                 if re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*', lines[i], re.I):
-                    break;
-                // If line starts with A: or Answer:, remove that
+                    break
+                # If line starts with A: or Answer:, remove that
                 a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i], re.I)
                 if a_match:
                     answer_lines.append(a_match.group(2).strip())
                 else:
-                    answer_lines.append(lines[i]);
+                    answer_lines.append(lines[i])
                 i += 1
             answer = " ".join(answer_lines).strip()
             if question and answer:
@@ -1145,7 +1145,7 @@ def admin_upload_pdf():
         else:
             i += 1
 
-    // Add to FAQS_DATA and save
+    # Add to FAQS_DATA and save
     FAQS_DATA.extend(new_faqs)
     global question_embeddings_cache
     question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
