@@ -6,6 +6,7 @@ import datetime
 import pdfplumber
 from werkzeug.utils import secure_filename
 import re
+import os
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
@@ -545,7 +546,7 @@ def ask():
 def health():
     return jsonify({'status': 'ok'})
 
-ADMIN_PASSWORD = "Test@12345"  # Set a strong password!
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "Test@12345")  # Set a strong password!
 
 @bp.route('/admin', methods=['GET'])
 def admin_page():
