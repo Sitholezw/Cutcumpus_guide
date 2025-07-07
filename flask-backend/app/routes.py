@@ -1153,6 +1153,7 @@ def admin_upload_pdf():
         else:
             i += 1
 
+
     # Add to FAQS_DATA and save
     FAQS_DATA.extend(new_faqs)
     global question_embeddings_cache
@@ -1160,7 +1161,6 @@ def admin_upload_pdf():
     with open('faqs.json', 'w', encoding='utf-8') as f:
         json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
     return jsonify({'status': 'ok', 'added': len(new_faqs)})
-
 def backup_faqs():
     shutil.copyfile('faqs.json', 'faqs_backup.json')
 
