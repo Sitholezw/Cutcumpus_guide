@@ -832,10 +832,11 @@ def admin_page():
     </form>
     <form id="faqForm">
       <input name="question" placeholder="Question" required>
-            <textarea name="answer" placeholder="Answer" required rows="3" style="resize:vertical;width:100%;"></textarea>
-      <input name="category" placeholder="Category (optional)">
-      <button type="submit">Add FAQ</button>
-    </form>
+  <textarea name="answer" placeholder="Answer" required rows="3" style="resize:vertical;width:100%;"></textarea>
+  <input name="category" placeholder="Category (optional)">
+  <button type="submit">Add FAQ</button>
+  <button type="button" id="cancelEditBtn" style="display:none;margin-left:8px;">Cancel Edit</button>
+</form>
     <input id="faqSearch" placeholder="Search FAQs...">
     <ul id="faqList" class="faq-list">
       {% for faq in faqs %}
