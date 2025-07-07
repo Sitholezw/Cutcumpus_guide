@@ -831,7 +831,7 @@ def admin_page():
       <button type="submit" class="pdf-btn">Upload PDF</button>
     </form>
     <form id="faqForm">
-      <input name="question" placeholder="Question" required>
+  <input name="question" placeholder="Question" required>
   <textarea name="answer" placeholder="Answer" required rows="3" style="resize:vertical;width:100%;"></textarea>
   <input name="category" placeholder="Category (optional)">
   <button type="submit">Add FAQ</button>
@@ -1127,7 +1127,7 @@ def admin_upload_pdf():
                 if a_match:
                     answer_lines.append(a_match.group(2).strip())
                 else:
-                    answer_lines.append(lines[i])
+                    answer_lines.append(lines[i]);
                 i += 1
             answer = " ".join(answer_lines).strip()
             if question and answer:
