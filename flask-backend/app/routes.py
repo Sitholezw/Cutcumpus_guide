@@ -887,19 +887,27 @@ def admin_page():
     const faqs = {{ faqs|tojson }};
 
     // Edit FAQ logic
-        function editFAQ(index) {
-      const faq = faqs[index];
-      const form = document.getElementById('faqForm');
-      form.question.value = faq.question;
-      form.answer.value = faq.answer;
-      form.category.value = faq.category || '';
-      form.dataset.editing = index;
-      form.querySelector('button[type="submit"]').textContent = "Update FAQ";
-      // Scroll to the Add/Edit FAQ form
-      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Optionally, focus the first input
-      form.question.focus();
-    }
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+const faqForm = document.getElementById('faqForm');
+
+function editFAQ(index) {
+  const faq = faqs[index];
+  faqForm.question.value = faq.question;
+  faqForm.answer.value = faq.answer;
+  faqForm.category.value = faq.category || '';
+  faqForm.dataset.editing = index;
+  faqForm.querySelector('button[type="submit"]').textContent = "Update FAQ";
+  cancelEditBtn.style.display = "inline-block";
+  faqForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  faqForm.question.focus();
+}
+
+cancelEditBtn.onclick = function() {
+  faqForm.reset();
+  faqForm.dataset.editing = "";
+  faqForm.querySelector('button[type="submit"]').textContent = "Add FAQ";
+  cancelEditBtn.style.display = "none";
+};
 
     // Add/Edit form handler
     document.getElementById('faqForm').onsubmit = async function(e) {
