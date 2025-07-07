@@ -370,6 +370,7 @@ body.dark form select:focus {
   <div id="loadingOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#fff;z-index:9999;">
   <h2 style="text-align:center;">Loading AI model, please wait...</h2>
 </div>
+  <div id="toast" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;display:none;z-index:9999;font-size:1.1em;"></div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     const chatbox = document.getElementById('chatbox');
@@ -1128,10 +1129,10 @@ def admin_upload_pdf():
             i += 1;
             # Collect answer lines until next question or end
             while i < len(lines):
-                # Stop if next line is a question
+                // Stop if next line is a question
                 if re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*', lines[i], re.I):
                     break;
-                # If line starts with A: or Answer:, remove that
+                // If line starts with A: or Answer:, remove that
                 a_match = re.match(r'^(A(?:nswer)?[:.\s-]*)\s*(.*)', lines[i], re.I)
                 if a_match:
                     answer_lines.append(a_match.group(2).strip())
@@ -1144,7 +1145,7 @@ def admin_upload_pdf():
         else:
             i += 1
 
-    # Add to FAQS_DATA and save
+    // Add to FAQS_DATA and save
     FAQS_DATA.extend(new_faqs)
     global question_embeddings_cache
     question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
