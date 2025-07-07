@@ -522,6 +522,14 @@ body.dark form select:focus {
       overlay.style.display = 'none';
     }
 
+    function showToast(msg, color="#2563eb") {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.background = color;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 2200);
+}
+
     waitForModel();
   </script>
 </body>
