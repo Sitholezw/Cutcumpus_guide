@@ -7,6 +7,7 @@ import pdfplumber
 from werkzeug.utils import secure_filename
 import re
 import os
+import shutil
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
@@ -1150,4 +1151,7 @@ def admin_upload_pdf():
     with open('faqs.json', 'w', encoding='utf-8') as f:
         json.dump(FAQS_DATA, f, ensure_ascii=False, indent=2)
     return jsonify({'status': 'ok', 'added': len(new_faqs)})
+
+def backup_faqs():
+    shutil.copyfile('faqs.json', 'faqs_backup.json')
 
