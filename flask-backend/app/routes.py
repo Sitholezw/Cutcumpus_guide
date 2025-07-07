@@ -817,8 +817,8 @@ def admin_page():
     </h2>
     <div style="margin-bottom:18px;">
   <a href="/admin?pw={{request.args.get('pw')}}">FAQ Admin</a> |
-  <a href="/admin/feedback?pw={{request.args.get('pw')}}">Feedback Review</a> |
-  <a href="/admin/export?pw={{request.args.get('pw')}}">Export FAQs</a>
+  <a href="/admin/feedback?pw={{request.args.get('pw')}}">Feedback Review</a> 
+  
 </div>
     <div style="margin: 0 auto 18px auto; display: flex; justify-content: center;">
       <a href="/admin/export?pw={{request.args.get('pw')}}" class="download-btn" download>
