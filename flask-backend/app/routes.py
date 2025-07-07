@@ -815,6 +815,11 @@ def admin_page():
       <img src="{{ url_for('static', filename='assets/images/favicon.png') }}" alt="icon">
       FAQ Admin Panel
     </h2>
+    <div style="margin-bottom:18px;">
+  <a href="/admin?pw={{request.args.get('pw')}}">FAQ Admin</a> |
+  <a href="/admin/feedback?pw={{request.args.get('pw')}}">Feedback Review</a> |
+  <a href="/admin/export?pw={{request.args.get('pw')}}">Export FAQs</a>
+</div>
     <div style="margin: 0 auto 18px auto; display: flex; justify-content: center;">
       <a href="/admin/export?pw={{request.args.get('pw')}}" class="download-btn" download>
         <span>⬇️ Download FAQs (JSON)</span>
