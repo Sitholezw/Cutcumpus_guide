@@ -841,9 +841,12 @@ def admin_page():
       <button type="submit" class="pdf-btn">Upload PDF</button>
     </form>
     <form id="faqForm">
-  <input name="question" placeholder="Question" required>
-  <textarea name="answer" placeholder="Answer" required rows="3" style="resize:vertical;width:100%;"></textarea>
-  <input name="category" placeholder="Category (optional)">
+  <label for="questionInput">Question</label>
+  <input id="questionInput" name="question" placeholder="Question" required>
+  <label for="answerInput">Answer</label>
+  <textarea id="answerInput" name="answer" placeholder="Answer" required rows="3" style="resize:vertical;width:100%;"></textarea>
+  <label for="categoryInput">Category (optional)</label>
+  <input id="categoryInput" name="category" placeholder="Category (optional)">
   <button type="submit">Add FAQ</button>
   <button type="button" id="cancelEditBtn" style="display:none;margin-left:8px;">Cancel Edit</button>
 </form>
@@ -1124,12 +1127,10 @@ def admin_upload_pdf():
     # Extract text from PDF
     with pdfplumber.open(file) as pdf:
         text = "\n".join(page.extract_text() or "" for page in pdf.pages)
-
-    # Improved extraction: collect answer lines until next question or end
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    lines = text.splitlines()
     new_faqs = []
     i = 0
-    while i < len(lines):
+    while i < len(lines): # type: ignore
         q_match = re.match(r'^(Q(?:uestion)?[:.\s-]*)\s*(.*)', lines[i], re.I)
         if q_match:
             question = q_match.group(2).strip();
