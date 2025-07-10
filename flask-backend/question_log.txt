@@ -89,3 +89,8 @@
 2025-07-09T20:26:37.249928 - How do I accept my offer?
 2025-07-09T20:26:48.571467 - do you offer food
 2025-07-09T20:27:04.620234 - how much is the application fee
+2025-07-10T12:07:50.525610 - How do I create a strong recommended password ?
+2025-07-10T12:07:58.296431 - How do I retrieve my reg number?
+2025-07-10T12:08:01.676906 - How do I accept my offer?
+2025-07-10T12:08:25.580008 - do you offer accommodation?
+2025-07-10T12:08:35.917662 - how about food
