@@ -85,3 +85,7 @@
 2025-07-07T16:10:39.023842 - i am failing to connect to the internet
 2025-07-07T16:10:55.072682 - i am failing to connect to the wifi
 2025-07-07T16:37:17.877376 - How do I retrieve my reg number?
+2025-07-09T20:26:34.454467 - How do I retrieve my reg number?
+2025-07-09T20:26:37.249928 - How do I accept my offer?
+2025-07-09T20:26:48.571467 - do you offer food
+2025-07-09T20:27:04.620234 - how much is the application fee
