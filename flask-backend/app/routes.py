@@ -8,6 +8,8 @@ from werkzeug.utils import secure_filename
 import re
 import os
 import shutil
+import requests as py_requests
+from bs4 import BeautifulSoup
 
 # Create a Blueprint for the app
 main = Blueprint('main', __name__)
@@ -23,6 +25,49 @@ with open('faqs.json', encoding='utf-8') as f:
 
 # Precompute embeddings
 question_embeddings_cache = model.encode([item["question"] for item in FAQS_DATA])
+
+FAQS_PATH = os.path.join(os.path.dirname(__file__), '..', 'faqs.json')
+
+# Helper: Load FAQs
+def load_faqs():
+    if not os.path.exists(FAQS_PATH):
+        return []
+    with open(FAQS_PATH, 'r', encoding='utf-8') as f:
+        try:
+            return json.load(f)
+        except Exception:
+            return []
+
+# Helper: Save FAQs
+def save_faqs(faqs):
+    with open(FAQS_PATH, 'w', encoding='utf-8') as f:
+        json.dump(faqs, f, ensure_ascii=False, indent=2)
+
+# Helper: Find answer in local faqs
+def find_answer(question):
+    faqs = load_faqs()
+    for faq in faqs:
+        if question.lower() in faq.get('question', '').lower():
+            return faq.get('answer')
+    return None
+
+# Scrape CUT website for FAQ-like info
+def scrape_cut_website():
+    url = 'https://cut.ac.zw/'
+    response = py_requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    # Example: Extract all text from <p> tags (customize as needed)
+    paragraphs = soup.find_all('p')
+    faqs = load_faqs()
+    new_faqs = []
+    for p in paragraphs:
+        text = p.get_text(strip=True)
+        if text and len(text) > 30 and text not in [f['answer'] for f in faqs]:
+            new_faqs.append({'question': text[:50] + '...', 'answer': text})
+    if new_faqs:
+        faqs.extend(new_faqs)
+        save_faqs(faqs)
+    return new_faqs
 
 def search_answer(question, faqs_data, embeddings_cache, top_k=1):
     question_embedding = model.encode([question])
@@ -539,18 +584,20 @@ body.dark form select:focus {
 def index():
     return render_template_string(HTML_PAGE)
 
+# Route: Chatbot question
 @bp.route('/ask', methods=['POST'])
 def ask():
     data = request.get_json()
-    question = data.get('question', '').strip()
-    # Log the question
-    with open('question_log.txt', 'a', encoding='utf-8') as logf:
-        logf.write(f"{datetime.datetime.now().isoformat()} - {question}\n")
-    threshold = 0.50  # You can adjust this value
-    results = search_answer(question, FAQS_DATA, question_embeddings_cache, top_k=1)
-    if results and results[0][1] >= threshold:
-        return jsonify({'answer': results[0][0]['answer']})
-    return jsonify({'answer': "Sorry, I couldn't find an answer to your question kindly get in touch with the helpdesk at +263672127433."}), 404
+    question = data.get('question', '')
+    answer = find_answer(question)
+    if answer:
+        return jsonify({'answer': answer, 'source': 'local'}), 200
+    # If not found, scrape and try again
+    scrape_cut_website()
+    answer = find_answer(question)
+    if answer:
+        return jsonify({'answer': answer, 'source': 'scraped'}), 200
+    return jsonify({'answer': "Sorry, I couldn't find an answer.", 'source': 'none'}), 404
 
 @bp.route('/health')
 def health():
